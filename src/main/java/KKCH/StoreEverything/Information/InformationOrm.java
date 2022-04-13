@@ -1,9 +1,6 @@
 package KKCH.StoreEverything.Information;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -11,6 +8,8 @@ import java.time.LocalDateTime;
 @Table(name = "information")
 public class InformationOrm {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "information_generator")
+    @SequenceGenerator(name="information_generator", sequenceName = "information_sequence", allocationSize=50)
     private Long id;
     @Column(nullable = false, length = 20)
     private String title;

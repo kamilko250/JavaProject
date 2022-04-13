@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Dodaj informację</title>
 </head>
 <body>
-Information form
+<form method="post" action="#" th:action="@{/information/add}" th:object="${information}">
+    <div><label>Tytuł: <input type="text" th:field="*{title}"></label>
+<!--        <p style="color:red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Tytuł musi mieć od 3 do 20 znaków</p>-->
+    </div>
+    <div><label>Czas przypomnienia: <input th:field="*{reminderDate}" type="datetime-local" min=""></label>
+<!--    <p style="color:red" th:if="${#fields.hasErrors('reminderDate')}" th:errors="*{reminderDate}"></p>-->
+    </div>
+    <div><label>Treść: <br/> <textarea th:field="*{content}"></textarea></label>
+<!--        <p style="color:red" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Treść musi zawierać międzu 5 a 500 znaków</p>-->
+    </div>
+    <div>
+        <label>Link: <input type="text" th:field="*{link}"></label>
+<!--        <p style="color:red" th:if="${#fields.hasErrors('link')}" th:errors="*{link}"></p>-->
+    </div>
+    <div>
+        <button type="submit">Dodaj</button>
+    </div>
+</form>
 </body>
 </html>

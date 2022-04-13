@@ -1,28 +1,32 @@
 package KKCH.StoreEverything.Information;
 
 import com.sun.istack.NotNull;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.lang.NonNull;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class InformationDto {
-    private Long id;
-    @NotNull
+   private Long id;
+    @NotEmpty
     @Size(max = 20, min = 3 , message = "Tytuł musi mieć między 3 a 20 znaków")
     private String title;
-    @NotNull
+    @NotEmpty
     @Size(max = 500, min = 5, message = "Treść musi mieć między 5 a 500 znaków")
     private String content;
     private String link;
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate addDate;
-    private LocalDateTime remimderDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime reminderDate;
 
     public Long getId () {
         return id;
@@ -64,11 +68,22 @@ public class InformationDto {
         this.addDate = addDate;
     }
 
-    public LocalDateTime getRemimderDate () {
-        return remimderDate;
+    public LocalDateTime getReminderDate () {
+        return reminderDate;
     }
 
-    public void setRemimderDate (LocalDateTime remimderDate) {
-        this.remimderDate = remimderDate;
+    public void setReminderDate (LocalDateTime reminderDate) {
+        this.reminderDate = reminderDate;
+    }
+
+    @Override
+    public String toString () {
+        return "InformationDto{" +
+                "title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", link='" + link + '\'' +
+                ", addDate=" + addDate +
+                ", reminderDate=" + reminderDate +
+                '}';
     }
 }
