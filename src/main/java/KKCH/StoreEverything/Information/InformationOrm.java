@@ -1,5 +1,7 @@
 package KKCH.StoreEverything.Information;
 
+import KKCH.StoreEverything.AppUser.AppUser;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,8 +18,17 @@ public class InformationOrm {
     @Column(nullable = false, length = 500)
     private String content;
     private String link;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "appuser_id", nullable = false)
+    private AppUser appUser;
+
     private LocalDate addDate;
     private LocalDateTime remimderDate;
+
+    public InformationOrm() {
+
+    }
 
     public Long getId () {
         return id;
@@ -66,5 +77,13 @@ public class InformationOrm {
 
     public void setRemimderDate (LocalDateTime remimderDate) {
         this.remimderDate = remimderDate;
+    }
+
+    public AppUser getAppUser() {
+        return appUser;
+    }
+
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 }
