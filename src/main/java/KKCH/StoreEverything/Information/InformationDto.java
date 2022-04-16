@@ -1,14 +1,9 @@
 package KKCH.StoreEverything.Information;
 
 import com.sun.istack.NotNull;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -16,12 +11,15 @@ import java.time.LocalDateTime;
 
 public class InformationDto {
    private Long id;
-    @NotEmpty
+    @NotEmpty(message="Pole wymagane")
+    @NotNull
     @Size(max = 20, min = 3 , message = "Tytuł musi mieć między 3 a 20 znaków")
     private String title;
-    @NotEmpty
+    @NotEmpty(message="Pole wymagane")
+    @NotNull
     @Size(max = 500, min = 5, message = "Treść musi mieć między 5 a 500 znaków")
     private String content;
+    @URL(message = "Pole musi mieć format adresu strony internetowej")
     private String link;
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate addDate;

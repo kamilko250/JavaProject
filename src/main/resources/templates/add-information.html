@@ -3,25 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Dodaj informację</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-<form method="post" action="#" th:action="@{/information/add}" th:object="${information}">
-    <div><label>Tytuł: <input type="text" th:field="*{title}"></label>
-<!--        <p style="color:red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Tytuł musi mieć od 3 do 20 znaków</p>-->
+<div align="center" class="col-md-12">
+    <div class="col-md-6">
+        <form method="post" action="#" th:action="@{/information/add}" th:object="${information}" novalidate>
+            <div class="form-group">
+                <label for="title">Tytuł:</label>
+                <input type="text" class="form-control" id="title" th:field="*{title}">
+                <p class="alert alert-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+            </div>
+            <div class="form-group">
+                <label for="reminderDate">Czas przypomnienia:</label>
+                <input type="datetime-local" class="form-control" id="reminderDate" th:field="*{reminderDate}">
+                <p class="alert alert-danger" th:if="${#fields.hasErrors('reminderDate')}" th:errors="*{reminderDate}" />
+            </div>
+            <div class="form-group">
+                <label for="content">Treść:</label>
+                <textarea  class="form-control" id="content" th:field="*{content}" />
+                <p class="alert alert-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}" />
+            </div>
+            <div class="form-group">
+                <label for="link">Link:</label>
+                <input type="url" class="form-control" id="link" th:field="*{link}" />
+                <p class="alert alert-danger" th:if="${#fields.hasErrors('link')}" th:errors="*{link}" />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Dodaj</button>
+            </div>
+        </form>
     </div>
-    <div><label>Czas przypomnienia: <input th:field="*{reminderDate}" type="datetime-local" min=""></label>
-<!--    <p style="color:red" th:if="${#fields.hasErrors('reminderDate')}" th:errors="*{reminderDate}"></p>-->
-    </div>
-    <div><label>Treść: <br/> <textarea th:field="*{content}"></textarea></label>
-<!--        <p style="color:red" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">Treść musi zawierać międzu 5 a 500 znaków</p>-->
-    </div>
-    <div>
-        <label>Link: <input type="text" th:field="*{link}"></label>
-<!--        <p style="color:red" th:if="${#fields.hasErrors('link')}" th:errors="*{link}"></p>-->
-    </div>
-    <div>
-        <button type="submit">Dodaj</button>
-    </div>
-</form>
+</div>
+
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </html>
