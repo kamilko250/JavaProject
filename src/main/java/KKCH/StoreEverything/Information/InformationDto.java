@@ -1,30 +1,45 @@
 package KKCH.StoreEverything.Information;
 
-import com.sun.istack.NotNull;
+import KKCH.StoreEverything.Category.CategoryDto;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class InformationDto {
    private Long id;
-    @NotEmpty(message="Pole wymagane")
+    @NotEmpty(message="Field required")
     @NotNull
-    @Size(max = 20, min = 3 , message = "Tytuł musi mieć między 3 a 20 znaków")
+    @Size(max = 20, min = 3 , message = "Title length should be between 3 and 20 characters")
     private String title;
-    @NotEmpty(message="Pole wymagane")
+    @NotEmpty(message="Field required")
     @NotNull
-    @Size(max = 500, min = 5, message = "Treść musi mieć między 5 a 500 znaków")
+    @Size(max = 500, min = 5, message = "Content length should be between 5 and 500 characters")
     private String content;
-    @URL(message = "Pole musi mieć format adresu strony internetowej")
+    @URL(message = "Link mus have URL format")
     private String link;
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate addDate;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime reminderDate;
+    @NotNull(message = "Category cannot be empty")
+    private CategoryDto category;
+
+    public InformationDto(CategoryDto category){
+        this.category = category;
+    }
+
+    public CategoryDto getCategory () {
+        return category;
+    }
+
+    public void setCategory (CategoryDto category) {
+        this.category = category;
+    }
 
     public Long getId () {
         return id;
