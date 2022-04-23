@@ -26,7 +26,7 @@ public class InformationController {
     private CategoryService categoryService;
 
     @GetMapping("/add")
-    public String showSignUpForm( Model model) {
+    public String showInformationForm( Model model) {
 
         model.addAttribute("information", new InformationDto(new CategoryDto()));
         List<CategoryDto> categoryDtoList = categoryService.getAll()
