@@ -2,7 +2,7 @@
 <html lang="pl" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Dodaj informację</title>
+    <title>Create Information</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
@@ -10,17 +10,12 @@
     <div class="col-md-6">
         <form method="post" action="#" th:action="@{/information/add}" th:object="${information}" novalidate>
             <div class="form-group">
-                <label for="title">Tytuł:</label>
+                <label for="title">Title:</label>
                 <input type="text" class="form-control" id="title" th:field="*{title}">
                 <p class="alert alert-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
             </div>
             <div class="form-group">
-                <label for="reminderDate">Czas przypomnienia:</label>
-                <input type="datetime-local" class="form-control" id="reminderDate" th:field="*{reminderDate}">
-                <p class="alert alert-danger" th:if="${#fields.hasErrors('reminderDate')}" th:errors="*{reminderDate}" />
-            </div>
-            <div class="form-group">
-                <label for="content">Treść:</label>
+                <label for="content">Content:</label>
                 <textarea  class="form-control" id="content" th:field="*{content}" />
                 <p class="alert alert-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}" />
             </div>
@@ -29,8 +24,19 @@
                 <input type="url" class="form-control" id="link" th:field="*{link}" />
                 <p class="alert alert-danger" th:if="${#fields.hasErrors('link')}" th:errors="*{link}" />
             </div>
+
+            <div >
+                <label for="categoryId" class="form-label">Select category:</label>
+                <input class="form-control " th:field="*{category.name}" id="categoryId"
+                     list="categoryList"/>
+                <datalist  id="categoryList"  aria-label="Category">
+                    <option th:each="category:${categories}" th:value="${category.name}"
+                            th:text="${category.name}"></option>
+                </datalist>
+            <p class="alert alert-danger" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"/>
+            </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">Dodaj</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </form>
     </div>

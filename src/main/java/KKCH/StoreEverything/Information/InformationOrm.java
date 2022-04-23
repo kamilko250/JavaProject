@@ -1,6 +1,7 @@
 package KKCH.StoreEverything.Information;
 
 import KKCH.StoreEverything.AppUser.AppUser;
+import KKCH.StoreEverything.Category.CategoryOrm;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -19,15 +20,36 @@ public class InformationOrm {
     private String content;
     private String link;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "appuser_id", nullable = false)
+    //TODO (temporary) add non null to column definition and must be assigned by default to logged user
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "appuser_id")
     private AppUser appUser;
 
     private LocalDate addDate;
     private LocalDateTime remimderDate;
 
-    public InformationOrm() {
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id", nullable = false)
+    private CategoryOrm category;
 
+
+    public InformationOrm (String title, String content, String link, LocalDate addDate, CategoryOrm category) {
+        this.title = title;
+        this.content = content;
+        this.link = link;
+        this.addDate = addDate;
+        this.category = category;
+    }
+
+    public InformationOrm() {
+    }
+
+    public CategoryOrm getCategory () {
+        return category;
+    }
+
+    public void setCategory (CategoryOrm category) {
+        this.category = category;
     }
 
     public Long getId () {
