@@ -11,12 +11,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/information")
@@ -36,13 +38,29 @@ public class InformationController {
         model.addAttribute("categories", categoryDtoList);
         return "add-information";
     }
+
+    @GetMapping("/{id}/edit")
+    public String showEditForm (@PathVariable("id") Long id ,Model  model) {
+        Optional<InformationOrm> information = informationService.getById(id);
+        if(!information.isPresent())
+            return "redirect:/";
+        model.addAttribute("information", modelMapper.map(information.get(),InformationDto.class));
+        List<CategoryDto> categoryDtoList = categoryService.getAll()
+                .stream()
+                .map(category -> modelMapper.map(category, CategoryDto.class))
+                .toList();
+        model.addAttribute("categories", categoryDtoList);
+        return "add-information";
+    }
+
     @Transactional
     @PostMapping("/add")
     public String addInformation (@Valid @ModelAttribute("information")  InformationDto information, BindingResult result, Model model) {
-            if (result.hasErrors()) {
+        if (result.hasErrors()) {
             return "add-information";
         }
-        information.setAddDate(LocalDate.now());
+        if(information.getId() == null)
+          information.setAddDate(LocalDate.now());
 
         InformationOrm informationOrm = modelMapper.map(information,InformationOrm.class);
 

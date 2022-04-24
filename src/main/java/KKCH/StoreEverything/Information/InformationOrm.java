@@ -33,12 +33,13 @@ public class InformationOrm {
     private CategoryOrm category;
 
 
-    public InformationOrm (String title, String content, String link, LocalDate addDate, CategoryOrm category) {
+    public InformationOrm (String title, String content, String link, LocalDate addDate, CategoryOrm category, AppUser user) {
         this.title = title;
         this.content = content;
         this.link = link;
         this.addDate = addDate;
         this.category = category;
+        this.appUser = user;
     }
 
     public InformationOrm() {

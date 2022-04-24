@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class InformationService {
     private CategoryService categoryService;
@@ -20,6 +22,21 @@ public class InformationService {
         informationRepository.save(information);
 
         return information;
+    }
+
+    @Transactional
+    public InformationOrm update (InformationOrm information) {
+        CategoryOrm category = categoryService.findByName(information.getCategory().getName());
+        if (category != null)
+            information.setCategory(category);
+
+        informationRepository.save(information);
+
+        return information;
+    }
+
+    public Optional<InformationOrm> getById (Long id){
+        return informationRepository.findById(id);
     }
 
     @Autowired
