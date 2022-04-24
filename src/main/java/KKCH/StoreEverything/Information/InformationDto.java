@@ -29,6 +29,8 @@ public class InformationDto {
     @NotNull(message = "Category cannot be empty")
     private CategoryDto category;
 
+    public InformationDto(){}
+
     public InformationDto(CategoryDto category){
         this.category = category;
     }
