@@ -39,6 +39,16 @@ public class InformationService {
         return informationRepository.findById(id);
     }
 
+    public java.util.List<InformationOrm> getAll(){
+        return informationRepository.findAll();
+    }
+
+    public void DeleteById(Long id){
+        Optional<InformationOrm> informationOrm = informationRepository.findById(id);
+        if(informationOrm.isPresent())
+            informationRepository.delete(informationOrm.get());
+    }
+
     @Autowired
     public void setInformationRepository (InformationRepository informationRepository) {
         this.informationRepository = informationRepository;
