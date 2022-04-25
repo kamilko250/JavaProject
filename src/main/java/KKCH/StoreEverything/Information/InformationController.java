@@ -65,7 +65,7 @@ public class InformationController {
         return "redirect:/";
     }
 
-    @GetMapping()
+    @GetMapping("/list")
     public String getAllInformations(Model  model){
         List<InformationDto> informationDto = modelMapper.map(informationService.getAll(), new TypeToken<List<InformationDto>>() {}.getType());
 
@@ -77,16 +77,16 @@ public class InformationController {
     public String getInformationById(@PathVariable("id") Long id, Model model) {
         Optional<InformationOrm> informationOrm = informationService.getById(id);
         if(informationOrm.isPresent())
-            model.addAttribute("informationDto", modelMapper.map(informationOrm.get(), InformationDto.class));
+            model.addAttribute("information", modelMapper.map(informationOrm.get(), InformationDto.class));
 
-        return "get by id";
+        return "get_by_id";
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/{id}/delete")
     public String deleteInformationById(@PathVariable("id") Long id){
         informationService.DeleteById(id);
 
-        return "remove by id";
+        return "redirect:/information/list";
     }
 
     @Autowired
