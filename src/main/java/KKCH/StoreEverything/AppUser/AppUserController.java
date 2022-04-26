@@ -45,4 +45,9 @@ public class AppUserController {
     public void login(@RequestBody AppUserDto userDto) throws Exception {
         appUserService.login(userDto.getName(), userDto.getPassword());
     }
+
+    @GetMapping("/logout")
+    public void logout() {
+        appUserService.logout();
+    }
 }
