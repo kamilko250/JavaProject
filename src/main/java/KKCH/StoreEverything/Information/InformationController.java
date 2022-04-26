@@ -12,10 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/information")
@@ -67,15 +68,77 @@ public class InformationController {
 
     @GetMapping("/list")
     public String getAllInformations(@RequestParam(name = "startDate",required = false) String startDate, @RequestParam(name = "category", required = false) String selectedCategory,
-                                     @RequestParam(name="endDate", required = false) String endDate, @RequestParam(name="sort", required = false ,defaultValue = "date_asc") String sort, Model  model){
-        startDate = startDate == null
+                                     @RequestParam(name="endDate", required = false) String endDate, @RequestParam(name="sort", required = false) String sort, Model  model, HttpServletResponse response,
+                                     @CookieValue(value = "sort", defaultValue = "date_asc") String sortCookie){
+        LocalDate StartDate = startDate == ""
                 ? LocalDate.now()
-                .toString()
-                : startDate;
+                : LocalDate.parse(startDate);
 
-        List<InformationDto> informationDto = modelMapper.map(informationService.getAll(), new TypeToken<List<InformationDto>>() {}.getType());
+        LocalDate EndDate = endDate == ""
+                ? LocalDate.MAX
+                : LocalDate.parse(endDate);
 
-        model.addAttribute("InformationList", informationDto);
+        String finalSelectedCategory = selectedCategory;
+        List<InformationOrm> informationOrms = informationService.getAll();
+        CategoryOrm categoryOrm = null;
+        if(selectedCategory != null && selectedCategory != "") {
+            Optional<CategoryOrm> categoryOrm1 =  categoryService.getAll().stream().filter(x-> x.getName().equals(finalSelectedCategory)).findFirst();
+            if(categoryOrm1.isPresent())
+                categoryOrm = categoryOrm1.get();
+        }
+
+        List<InformationOrm> filteredInformationOrms = new ArrayList<InformationOrm>() ;
+
+
+        for(var inf : informationOrms)
+        {
+            if(categoryOrm != null && inf.getCategory().getId() != categoryOrm.getId())
+                continue;
+            if(startDate != null && startDate != "" && inf.getAddDate().isBefore(StartDate))
+                continue;
+            if(endDate != null &&  endDate != "" && inf.getAddDate().isAfter(EndDate))
+                continue;
+
+            filteredInformationOrms.add(inf);
+        }
+
+        List<InformationDto> informationDto = modelMapper.map(filteredInformationOrms, new TypeToken<List<InformationDto>>() {}.getType());
+
+        if(sort != null || sortCookie != null){
+            if(sort == null && sortCookie != null)
+                sort = sortCookie;
+
+            Cookie cookie = new Cookie("sort", sort);
+            response.addCookie(cookie);
+
+            switch(sort){
+                case "date_asc":
+                    Collections.sort(filteredInformationOrms, Comparator.comparing(obj -> obj.getAddDate()));
+                    break;
+                case "date_dec":
+                    Collections.sort(filteredInformationOrms, Comparator.comparing(obj -> obj.getAddDate()));
+                    Collections.reverse(filteredInformationOrms);
+                    break;
+                case "category_asc":
+                    Collections.sort(filteredInformationOrms, Comparator.comparing(obj -> obj.getCategory().getName()));
+                    break;
+                case "category_desc":
+                    Collections.sort(filteredInformationOrms, Comparator.comparing(obj -> obj.getCategory().getName()));
+                    Collections.reverse(filteredInformationOrms);
+                    break;
+                case "alphabetic_asc":
+                    Collections.sort(filteredInformationOrms, Comparator.comparing(obj -> obj.getTitle()));
+                    break;
+                case "alphabetic_desc":
+                    Collections.sort(filteredInformationOrms, Comparator.comparing(obj -> obj.getTitle()));
+                    Collections.reverse(filteredInformationOrms);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        model.addAttribute("InformationList", filteredInformationOrms);
 
         List<CategoryDto> categoryDtoList = categoryService.getAll()
                 .stream()
