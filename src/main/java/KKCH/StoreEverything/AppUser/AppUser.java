@@ -21,6 +21,7 @@ public class AppUser {
     private String email;
     private String password;
     private Integer age;
+    
     @OneToMany(
             mappedBy = "appUser",
             fetch = FetchType.LAZY,
