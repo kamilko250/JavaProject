@@ -1,21 +1,36 @@
 package KKCH.StoreEverything.AppUser;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
-public class AppUserService {
-
+@Service("userService")
+public class AppUserService implements UserService {
+    @Autowired
+    private UserDetailsService userDetailsService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    //---
     private final AppUserRepository appUserRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AppUserService(AppUserRepository appUserRepository)
+    public AppUserService(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder)
     {
         this.appUserRepository = appUserRepository;
+        this.passwordEncoder = passwordEncoder;
     }
+
+
 
     public AppUser get(Long id){
         Optional<AppUser> appUser = appUserRepository.findById(id);
@@ -52,5 +67,60 @@ public class AppUserService {
             return appUser.get();
         }
         return null;
+    }
+
+    //update/register są bardzo podobne, jedno do wywalenia pójdzie
+    @Override
+    public AppUser register(AppUserDto userDto) throws Exception {
+        if(checkIfUserExist(userDto)){
+            throw new Exception("User already exists");
+        }
+        AppUser user = new AppUser();
+        BeanUtils.copyProperties(userDto, user);
+        encodePassword(user, userDto);
+        appUserRepository.save(user);
+
+        return user;
+    }
+
+    @Override
+    public void login(String username, String password) throws Exception {
+        Optional<AppUser> appUser = appUserRepository.findByName(username);
+        if(!appUser.isPresent())
+        {
+            throw new Exception("user not found");
+        }
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
+
+        authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+
+        if (usernamePasswordAuthenticationToken.isAuthenticated()) {
+            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        }
+    }
+
+    public void logout(){
+        SecurityContextHolder.getContext().setAuthentication(null);
+    }
+
+    public AppUser getCurrentUser(){
+        //SecurityContextHolder.getContext().getAuthentication().getName();
+        return (AppUser) SecurityContextHolder.getContext().getAuthentication().getDetails();
+    }
+
+    @Override
+    public boolean checkIfUserExist(AppUserDto userDto) {
+        Optional<AppUser> appUser = appUserRepository.findById(userDto.getId());
+        return appUser.isPresent();
+    }
+
+    @Override
+    public Optional<AppUser> getUserById(Long id) throws Exception {
+        return appUserRepository.findById(id);
+    }
+
+    private void encodePassword( AppUser user, AppUserDto userdto){
+        user.setPassword(passwordEncoder.encode(userdto.getPassword()));
     }
 }

@@ -2,6 +2,7 @@ package KKCH.StoreEverything.AppUser;
 
 import com.sun.istack.NotNull;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 

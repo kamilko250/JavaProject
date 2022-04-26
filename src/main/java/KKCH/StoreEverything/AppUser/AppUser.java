@@ -1,6 +1,7 @@
 package KKCH.StoreEverything.AppUser;
 
 import KKCH.StoreEverything.Information.InformationOrm;
+import KKCH.StoreEverything.Role.UserRole;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,15 +17,20 @@ public class AppUser {
     private Long id;
     private String name;
     private String surname;
+    @Column(unique = true)
     private String email;
     private String password;
     private Integer age;
+    
     @OneToMany(
             mappedBy = "appUser",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL
     )
     private Set<InformationOrm> informationOrms;
+
+    @ManyToMany
+    private Set<UserRole> roles;
 
     public AppUser() {
     }
@@ -102,6 +108,14 @@ public class AppUser {
 
     public void setInformationOrms(List<InformationOrm> informationOrms) {
         this.informationOrms = informationOrms.stream().collect(Collectors.toSet());
+    }
+
+    public Set<UserRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<UserRole> roles) {
+        this.roles = roles;
     }
 
     @Override
