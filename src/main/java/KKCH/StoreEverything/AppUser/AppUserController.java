@@ -25,7 +25,7 @@ public class AppUserController {
     public List<AppUser> getUsers() {
         return appUserService.getAll();
     }
-
+//do usunięcia
     @PostMapping()
     public AppUser createUser(@RequestBody AppUserDto userDto) {
         return appUserService.update(userDto);
@@ -34,5 +34,15 @@ public class AppUserController {
     @DeleteMapping()
     public AppUser deleteUser(@RequestBody AppUserDto userDto){
         return appUserService.delete(userDto);
+    }
+
+    @PostMapping("/register")
+    public AppUser register(@RequestBody AppUserDto userDto) throws Exception {
+        return appUserService.register(userDto);
+    }
+
+    @GetMapping("/login")
+    public void login(@RequestBody AppUserDto userDto) throws Exception {
+        appUserService.login(userDto.getName(), userDto.getPassword());
     }
 }
