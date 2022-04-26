@@ -27,7 +27,40 @@
         </div>
     </div>
 </nav>
-<div class="flex">
+
+<div class="container">
+    <p><strong>Filters</strong></p>
+    <form method="get" th:action="@{/information/list}">
+        <div class="mb-3">
+            <label for="start-date" class="form-label">Start date:</label>
+            <input type="date" class="form-control" id="start-date" th:name="startDate" th:value="${start_date}">
+        </div>
+        <div class="mb-3">
+            <label for="end-date" class="form-label">End date:</label>
+            <input type="date" class="form-control" id="end-date" th:name="endDate" th:value="${end_date}">
+        </div>
+        <div class="mb-3" th:name="sort" th:value="sort">
+            <label for="category" class="form-label">Category:</label>
+            <select class="form-select" id="category" th:name="'category'"  >
+                <option th:value="''">Select</option>
+                <option th:each="cat:${categories}" th:selected="${cat.name==category}" th:value="${cat.name}" th:text="${cat.name}"></option>
+            </select>
+        </div>
+      <div class="mb-3" >
+          <label for="sort" class="form-label">Sort:</label>
+          <select class="form-select" id="sort" th:name="'sort'" >
+              <option th:value="'category_desc'" th:selected="${'category_desc'==sort}">Category descending</option>
+              <option th:value="'category_asc'"  th:selected="${'category_asc'==sort}">Category ascending</option>
+              <option th:value="'date_desc'"  th:selected="${'date_desc'==sort}">Date descending</option>
+              <option th:value="'date_asc'"  th:selected="${'date_asc'==sort}">Date ascending</option>
+              <option th:value="'alphabetic_desc'"  th:selected="${'alphabetic_desc'==sort}">Alphabetic descending</option>
+              <option th:value="'alphabetic_asc'"  th:selected="${'alphabetic_asc'==sort}">Alphabetic ascending</option>
+          </select>
+      </div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+</div>
+<div class="container d-flex">
 
     <div class="card" style="width: 18rem;" th:each="information :${InformationList}">
         <div class="card-body">

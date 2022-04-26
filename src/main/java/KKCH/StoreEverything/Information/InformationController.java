@@ -66,10 +66,31 @@ public class InformationController {
     }
 
     @GetMapping("/list")
-    public String getAllInformations(Model  model){
+    public String getAllInformations(@RequestParam(name = "startDate",required = false) String startDate, @RequestParam(name = "category", required = false) String selectedCategory,
+                                     @RequestParam(name="endDate", required = false) String endDate, @RequestParam(name="sort", required = false ,defaultValue = "date_asc") String sort, Model  model){
+        startDate = startDate == null
+                ? LocalDate.now()
+                .toString()
+                : startDate;
+
         List<InformationDto> informationDto = modelMapper.map(informationService.getAll(), new TypeToken<List<InformationDto>>() {}.getType());
 
         model.addAttribute("InformationList", informationDto);
+
+        List<CategoryDto> categoryDtoList = categoryService.getAll()
+                .stream()
+                .map(category -> modelMapper.map(category, CategoryDto.class))
+                .toList();
+
+        selectedCategory = selectedCategory == null
+                ? ""
+                : selectedCategory;
+
+        model.addAttribute("categories", categoryDtoList);
+        model.addAttribute("category", selectedCategory);
+        model.addAttribute("end_date", endDate );
+        model.addAttribute("start_date", startDate);
+        model.addAttribute("sort", sort );
         return "get-all";
     }
 
