@@ -4,12 +4,13 @@ import KKCH.StoreEverything.Information.InformationOrm;
 import KKCH.StoreEverything.Role.UserRole;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Table
+@Table(name = "APPUSER")
 public class AppUser {
 
     @Id
@@ -29,7 +30,13 @@ public class AppUser {
     )
     private Set<InformationOrm> informationOrms;
 
-    @ManyToMany
+    @ManyToMany(
+            fetch = FetchType.EAGER
+    )
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "appUser_id"),
+            inverseJoinColumns = @JoinColumn(name = "userRole_id"))
     private Set<UserRole> roles;
 
     public AppUser() {
