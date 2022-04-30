@@ -1,6 +1,7 @@
 package KKCH.StoreEverything;
 
 import KKCH.StoreEverything.AppUser.AppUser;
+import KKCH.StoreEverything.AppUser.AppUserDto;
 import KKCH.StoreEverything.AppUser.AppUserRepository;
 import KKCH.StoreEverything.AppUser.AppUserService;
 import KKCH.StoreEverything.Category.CategoryOrm;
@@ -35,7 +36,8 @@ public class StoreEverythinkConfiguration {
                     "Kamil",
                     "Kamil",
                     "Kamil",
-                    22
+                    22,
+                    "Kamil"
             );
             kamil.setRoles(roles);
             appUserRepository.save(kamil);
@@ -44,7 +46,14 @@ public class StoreEverythinkConfiguration {
                 Set<UserRole> kRoles = (Set<UserRole>) t.get().getRoles();
                 kRoles.forEach(System.out::println);
             }
-
+            AppUserDto us = new AppUserDto();
+            us.setAge(22);
+            us.setEmail("abc@def.gh");
+            us.setPassword("aaaaa");
+            us.setName("ak");
+            us.setSurname("akk");
+            us.setLogin("log");
+            appUserService.register(us);
 
             var users = appUserService.getAll();
             InformationOrm information1 = new InformationOrm(

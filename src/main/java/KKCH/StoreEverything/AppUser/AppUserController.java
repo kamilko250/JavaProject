@@ -41,9 +41,9 @@ public class AppUserController {
         return appUserService.register(userDto);
     }
 
-    @GetMapping("/login")
-    public void login(@RequestBody AppUserDto userDto) throws Exception {
-        appUserService.login(userDto.getName(), userDto.getPassword());
+    @PostMapping("/login")
+    public void login(@RequestBody UserLoginData loginData) throws Exception {
+        appUserService.login(loginData.getLogin(), loginData.getPassword());
     }
 
     @GetMapping("/logout")

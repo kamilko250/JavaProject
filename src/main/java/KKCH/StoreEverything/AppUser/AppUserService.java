@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service("userService")
 public class AppUserService implements UserService {
     @Autowired
-    private UserDetailsService userDetailsService;
+    private CustomUserDetailsService userDetailsService;
     @Autowired
     private AuthenticationManager authenticationManager;
     //---
@@ -54,7 +54,8 @@ public class AppUserService implements UserService {
             userDto.getSurname(),
             userDto.getEmail(),
             userDto.getPassword(),
-            userDto.getAge()
+            userDto.getAge(),
+            userDto.getLogin()
             );
         return appUserRepository.save(newAppUser);
     }
@@ -72,9 +73,9 @@ public class AppUserService implements UserService {
     //update/register są bardzo podobne, jedno do wywalenia pójdzie
     @Override
     public AppUser register(AppUserDto userDto) throws Exception {
-        if(checkIfUserExist(userDto)){
-            throw new Exception("User already exists");
-        }
+        //if(checkIfUserExist(userDto.getId())){
+        //    throw new Exception("User already exists");
+        //}
         AppUser user = new AppUser();
         BeanUtils.copyProperties(userDto, user);
         encodePassword(user, userDto);
@@ -84,13 +85,13 @@ public class AppUserService implements UserService {
     }
 
     @Override
-    public void login(String username, String password) throws Exception {
-        Optional<AppUser> appUser = appUserRepository.findByName(username);
+    public void login(String login, String password) throws Exception {
+        Optional<AppUser> appUser = appUserRepository.findByLogin(login);
         if(!appUser.isPresent())
         {
             throw new Exception("user not found");
         }
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        UserDetails userDetails = userDetailsService.loadUserByLogin(login);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
 
         authenticationManager.authenticate(usernamePasswordAuthenticationToken);
@@ -110,8 +111,8 @@ public class AppUserService implements UserService {
     }
 
     @Override
-    public boolean checkIfUserExist(AppUserDto userDto) {
-        Optional<AppUser> appUser = appUserRepository.findById(userDto.getId());
+    public boolean checkIfUserExist(Long id) {
+        Optional<AppUser> appUser = appUserRepository.findById(id);
         return appUser.isPresent();
     }
 

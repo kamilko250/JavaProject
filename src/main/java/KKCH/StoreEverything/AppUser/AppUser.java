@@ -16,6 +16,8 @@ public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true)
+    private String login;
     private String name;
     private String surname;
     @Column(unique = true)
@@ -42,21 +44,23 @@ public class AppUser {
     public AppUser() {
     }
 
-    public AppUser(String name, String surname, String email, String password, Integer age) {
+    public AppUser(String name, String surname, String email, String password, Integer age, String login) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.password = password;
         this.age = age;
+        this.login = login;
     }
 
-    public AppUser(Long id, String name, String surname, String email, String password, Integer age) {
+    public AppUser(Long id, String name, String surname, String email, String password, Integer age, String login) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.password = password;
         this.email = email;
         this.age = age;
+        this.login = login;
     }
 
     public Long getId() {
@@ -123,6 +127,14 @@ public class AppUser {
 
     public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     @Override
