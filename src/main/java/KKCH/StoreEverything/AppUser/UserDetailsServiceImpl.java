@@ -35,7 +35,7 @@ public class UserDetailsServiceImpl implements CustomUserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<AppUser> user = userRepository.findByName(username);
+        Optional<AppUser> user = userRepository.findByLogin(username);
         if (!user.isPresent()) throw new UsernameNotFoundException(username);
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();

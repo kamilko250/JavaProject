@@ -70,11 +70,11 @@ public class InformationController {
     public String getAllInformations(@RequestParam(name = "startDate",required = false) String startDate, @RequestParam(name = "category", required = false) String selectedCategory,
                                      @RequestParam(name="endDate", required = false) String endDate, @RequestParam(name="sort", required = false) String sort, Model  model, HttpServletResponse response,
                                      @CookieValue(value = "sort", defaultValue = "date_asc") String sortCookie){
-        LocalDate StartDate = startDate == ""
+        LocalDate StartDate = startDate == null || startDate.isEmpty()
                 ? LocalDate.now()
                 : LocalDate.parse(startDate);
 
-        LocalDate EndDate = endDate == ""
+        LocalDate EndDate = endDate == null || endDate.isEmpty()
                 ? LocalDate.MAX
                 : LocalDate.parse(endDate);
 

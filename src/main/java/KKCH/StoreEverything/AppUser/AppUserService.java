@@ -87,7 +87,7 @@ public class AppUserService implements UserService {
     @Override
     public void login(String login, String password) throws Exception {
         Optional<AppUser> appUser = appUserRepository.findByLogin(login);
-        if(!appUser.isPresent())
+        if(appUser.isEmpty())
         {
             throw new Exception("user not found");
         }
