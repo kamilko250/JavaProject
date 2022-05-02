@@ -33,9 +33,10 @@ public class UserDetailsServiceImpl implements CustomUserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.get().getLogin(), user.get().getPassword(), grantedAuthorities);
     }
 
+    //default implementation
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<AppUser> user = userRepository.findByLogin(username);
+        Optional<AppUser> user = userRepository.findByName(username);
         if (!user.isPresent()) throw new UsernameNotFoundException(username);
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
@@ -43,6 +44,6 @@ public class UserDetailsServiceImpl implements CustomUserDetailsService {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
         }
 
-        return new org.springframework.security.core.userdetails.User(user.get().getLogin(), user.get().getPassword(), grantedAuthorities);
+        return new org.springframework.security.core.userdetails.User(user.get().getName(), user.get().getPassword(), grantedAuthorities);
     }
 }
