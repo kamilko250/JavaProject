@@ -30,7 +30,10 @@ public class UserDetailsServiceImpl implements CustomUserDetailsService {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
         }
 
-        return new org.springframework.security.core.userdetails.User(user.get().getLogin(), user.get().getPassword(), grantedAuthorities);
+        return new CustomUser(user.get()
+                                      .getId(), user.get()
+                                      .getName(), user.get()
+                                      .getPassword(), grantedAuthorities);
     }
 
     //default implementation
@@ -50,6 +53,6 @@ public class UserDetailsServiceImpl implements CustomUserDetailsService {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
         }
 
-        return new org.springframework.security.core.userdetails.User(user.get().getName(), user.get().getPassword(), grantedAuthorities);
+        return new CustomUser(user.get().getId(),user.get().getName(), user.get().getPassword(), grantedAuthorities);
     }
 }

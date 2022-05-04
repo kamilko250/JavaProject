@@ -1,5 +1,5 @@
 <!DOCTYPE html >
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Home Page</title>
@@ -22,6 +22,9 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/information/add">Add information</a>
                 </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link active" aria-current="page" href="/users">Users list</a>
+                </li>
             </ul>
 
             <div sec:authorize="isAnonymous()">
@@ -41,6 +44,7 @@
         </div>
     </div>
 </nav>
+<h2 th:text="'Welcome '+ ${userdata.name}+' '+ ${userdata.surname}"></h2>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
