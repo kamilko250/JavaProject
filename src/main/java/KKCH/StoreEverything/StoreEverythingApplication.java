@@ -1,7 +1,7 @@
 package KKCH.StoreEverything;
 
-import KKCH.StoreEverything.AppUser.CustomUserDetailsService;
-import KKCH.StoreEverything.AppUser.UserDetailsServiceImpl;
+import KKCH.StoreEverything.Security.CustomUserDetailsService;
+import KKCH.StoreEverything.Security.UserDetailsServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,8 +11,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
