@@ -1,5 +1,6 @@
 package KKCH.StoreEverything.AppUser;
 
+import KKCH.StoreEverything.Role.UserRoleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,11 +22,13 @@ import java.util.List;
 public class AppUserController {
 
     private final AppUserService appUserService;
-private ModelMapper modelMapper;
+    private final UserRoleService roleService;
+    private ModelMapper modelMapper;
 
     @Autowired
-    public AppUserController (AppUserService appUserService) {
+    public AppUserController(AppUserService appUserService, UserRoleService roleService) {
         this.appUserService = appUserService;
+        this.roleService = roleService;
     }
 
     @GetMapping()
@@ -38,11 +41,11 @@ private ModelMapper modelMapper;
         return appUserService.getAll();
     }
 
-    //do usunięcia
+    /*//do usunięcia
     @PostMapping()
     public AppUser createUser (@Valid @RequestBody AppUserDto userDto) {
         return appUserService.update(userDto);
-    }
+    }*/
 
     @PutMapping("/{id}")
     public AppUser updateUser (@Valid @RequestBody AppUserEditDto userDto, @PathVariable Long id) throws Exception {
@@ -77,6 +80,11 @@ private ModelMapper modelMapper;
         appUserService.logout();
     }
 
+    /*@PostMapping("/addRole")
+    public void addToRole(@RequestParam Long userId, @RequestParam String roleName){ roleService.addToRole(userId, roleName);}
+
+    @PostMapping("/removeRole")
+    public void removeFromRole(@RequestParam Long userId, @RequestParam String roleName){ roleService.removeFromRole(userId, roleName);}*/
 
     @Autowired
     public void setModelMapper (ModelMapper modelMapper) {

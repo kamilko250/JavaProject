@@ -63,6 +63,16 @@ public class AppUser {
         this.login = login;
     }
 
+    public AppUser(String name, String surname, String email, String password, Integer age, String login, Set<UserRole> roles) {
+        this.name = name;
+        this.surname = surname;
+        this.password = password;
+        this.email = email;
+        this.age = age;
+        this.login = login;
+        this.roles = roles;
+    }
+
     public Long getId() {
         return id;
     }

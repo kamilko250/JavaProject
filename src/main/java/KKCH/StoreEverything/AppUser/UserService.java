@@ -6,7 +6,7 @@ public interface UserService {
     AppUser register(final AppUserDto user) throws Exception;
     void login(String login, String password) throws Exception;
     void logout();
-    AppUser getCurrentUser();
+    AppUserDto getCurrentUser();
     boolean checkIfUserExist(Long id);
     Optional<AppUser> getUserById(final Long id) throws Exception;
 }

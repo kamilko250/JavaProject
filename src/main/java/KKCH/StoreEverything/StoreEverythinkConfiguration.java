@@ -23,37 +23,7 @@ public class StoreEverythinkConfiguration {
     @Bean
     CommandLineRunner commandLineRunner(AppUserRepository appUserRepository, UserRoleRepository userRoleRepository, InformationService repository, AppUserService appUserService) {
         return args -> {
-            UserRole testRole = new UserRole("user");
-            UserRole testRole2 = new UserRole("admin");
-            userRoleRepository.save(testRole);
-            userRoleRepository.save(testRole2);
-            Set<UserRole> roles = new HashSet<>();
-            roles.add(testRole);
-            roles.add(testRole2);
-
-            AppUser kamil = new AppUser(
-                    "Kamil",
-                    "Kamil",
-                    "Kamil",
-                    "Kamil",
-                    22,
-                    "Kamil"
-            );
-            kamil.setRoles(roles);
-            appUserRepository.save(kamil);
-            Optional<AppUser> t = appUserRepository.findByName("Kamil");
-            if(t.isPresent()){
-                Set<UserRole> kRoles = (Set<UserRole>) t.get().getRoles();
-                kRoles.forEach(System.out::println);
-            }
-            AppUserDto us = new AppUserDto();
-            us.setAge(22);
-            us.setEmail("abc@def.gh");
-            us.setPassword("aaaaa");
-            us.setName("ak");
-            us.setSurname("akk");
-            us.setLogin("log");
-            appUserService.register(us);
+            //SetupDataLoader
 
             var users = appUserService.getAll();
             InformationOrm information1 = new InformationOrm(

@@ -1,8 +1,10 @@
 package KKCH.StoreEverything.Role;
 
 import KKCH.StoreEverything.AppUser.AppUser;
+import KKCH.StoreEverything.Role.Privilege.Privilege;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +19,15 @@ public class UserRole {
 
     @ManyToMany(mappedBy = "roles")
     private Set<AppUser> users;
+
+    @ManyToMany
+    @JoinTable(
+            name = "roles_privileges",
+            joinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "privilege_id", referencedColumnName = "id"))
+    private Set<Privilege> privileges;
 
     public UserRole(String name){
         this.name = name;
@@ -48,6 +59,14 @@ public class UserRole {
 
     public void setUsers(Set<AppUser> users) {
         this.users = users;
+    }
+
+    public Set<Privilege> getPrivileges() {
+        return privileges;
+    }
+
+    public void setPrivileges(Set<Privilege> privileges) {
+        this.privileges = privileges;
     }
 
     @Override

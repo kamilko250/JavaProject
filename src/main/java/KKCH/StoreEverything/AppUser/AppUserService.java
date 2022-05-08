@@ -1,5 +1,8 @@
 package KKCH.StoreEverything.AppUser;
 
+import KKCH.StoreEverything.Role.UserRole;
+import KKCH.StoreEverything.Role.UserRoleRepository;
+import KKCH.StoreEverything.Security.CustomUserDetailsService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,25 +12,33 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service("userService")
 public class AppUserService implements UserService {
     //---
     private final AppUserRepository appUserRepository;
+    private final UserRoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final CustomUserDetailsService userDetailsService;
+    private final AuthenticationManager authenticationManager;
 
     @Autowired
-    public AppUserService (AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
+    public AppUserService(
+            AppUserRepository appUserRepository,
+            PasswordEncoder passwordEncoder,
+            UserRoleRepository roleRepository,
+            CustomUserDetailsService userDetailsService,
+            AuthenticationManager authenticationManager) {
         this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
+        this.userDetailsService = userDetailsService;
+        this.authenticationManager = authenticationManager;
     }
-
 
     public AppUser get (Long id) {
         Optional<AppUser> appUser = appUserRepository.findById(id);
@@ -73,7 +84,6 @@ public class AppUserService implements UserService {
         return null;
     }
 
-    //update/register są bardzo podobne, jedno do wywalenia pójdzie NIE WYWALAJ UPDATE!!!
     @Override
     public AppUser register (AppUserDto userDto) throws Exception {
         //if(checkIfUserExist(userDto.getId())){
@@ -82,6 +92,10 @@ public class AppUserService implements UserService {
         AppUser user = new AppUser();
         BeanUtils.copyProperties(userDto, user);
         encodePassword(user, userDto);
+        UserRole role = roleRepository.findByName("ROLE_USER").get();//should never fail
+        Set<UserRole> roles = new HashSet<>();
+        roles.add(role);
+        user.setRoles(roles);//add to "user" role by default
         appUserRepository.save(user);
 
         return user;
@@ -110,11 +124,17 @@ public class AppUserService implements UserService {
                 .setAuthentication(null);
     }
 
-    public AppUser getCurrentUser () {
+    public AppUserDto getCurrentUser () {
         //SecurityContextHolder.getContext().getAuthentication().getName();
-        return (AppUser) SecurityContextHolder.getContext()
+        String name = SecurityContextHolder.getContext()
                 .getAuthentication()
-                .getDetails();
+                .getName();
+        Optional<AppUser> optUser = appUserRepository.findByName(name);
+        if(optUser.isEmpty()) return null;//idk
+        AppUserDto userDto = new AppUserDto();
+        BeanUtils.copyProperties(optUser.get(), userDto);
+
+        return userDto;
     }
 
     @Override
