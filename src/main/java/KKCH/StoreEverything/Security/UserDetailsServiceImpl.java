@@ -24,9 +24,14 @@ public class UserDetailsServiceImpl implements CustomUserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByLogin(String login) throws Exception {
         Optional<AppUser> optUser = userRepository.findByLogin(login);
-        if (optUser.isEmpty()) throw new Exception(String.format("Login name: '%s' not found", login));
+        if (optUser.isEmpty()) {
+            optUser = userRepository.findByName(login);
+            if(optUser.isEmpty()) {
+                throw new Exception(String.format("Name: '%s' not found", login));
+            }
+        }
         AppUser user = optUser.get();
-        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+        //Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         /*for (UserRole role : user.getRoles()){
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
         }*/

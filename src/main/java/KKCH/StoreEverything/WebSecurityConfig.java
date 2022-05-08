@@ -55,6 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers( "/user/register","/user/login","/").anonymous()
                     .antMatchers("/resources/**").permitAll()
                     .antMatchers("/information/**").access("(hasRole('user')) and isAuthenticated()")//wszystkie endpointy do dodania
+                    .antMatchers("/user/addRole", "/user/removeRole").access("(hasRole('admin')) and isAuthenticated()")
                     //.antMatchers("/*").rememberMe()//jesli bedziemy tego używać
                     .anyRequest()//wszystko inne wymaga autentykacji domyślnie
                     .authenticated()//wszystko inne wymaga autentykacji domyślnie

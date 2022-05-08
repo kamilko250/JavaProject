@@ -21,6 +21,10 @@ public class Privilege {
         this.name = name;
     }
 
+    public Privilege() {
+
+    }
+
     public Long getId() {
         return id;
     }

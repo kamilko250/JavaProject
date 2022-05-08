@@ -1,5 +1,6 @@
 package KKCH.StoreEverything;
 
+import KKCH.StoreEverything.Role.UserRoleService;
 import KKCH.StoreEverything.Security.CustomUserDetailsService;
 import KKCH.StoreEverything.Security.UserDetailsServiceImpl;
 import org.modelmapper.ModelMapper;
@@ -40,4 +41,7 @@ public class StoreEverythingApplication {
 	public CustomUserDetailsService UserDetailsServiceImpl() {
 		return new UserDetailsServiceImpl();
 	}
+
+	@Bean
+	public UserRoleService userRoleService(){ return new UserRoleService(); }
 }
