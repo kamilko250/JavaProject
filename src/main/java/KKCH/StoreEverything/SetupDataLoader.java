@@ -53,14 +53,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         Set<Privilege> limitedUserPrivileges = new HashSet<>(
                 Arrays.asList(readPrivilege)
         );
-        createRoleIfNotFound("admin", adminPrivileges);
-        createRoleIfNotFound("user", userPrivileges);
-        createRoleIfNotFound("limitedUser", limitedUserPrivileges);
+        createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
+        createRoleIfNotFound("ROLE_USER", userPrivileges);
+        createRoleIfNotFound("ROLE_LIMITEDUSER", limitedUserPrivileges);
 
-        UserRole adminRole = roleRepository.findByName("admin").get();
+        UserRole adminRole = roleRepository.findByName("ROLE_ADMIN").get();
         AppUser admin = new AppUser(
-                "admin",
-                "admin",
+                "Admin",
+                "Adminn",
                 "admin@test.t",
                 passwordEncoder.encode("admin"),
                 22,

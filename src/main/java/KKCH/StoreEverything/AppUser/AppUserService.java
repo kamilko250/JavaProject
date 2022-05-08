@@ -92,7 +92,7 @@ public class AppUserService implements UserService {
         AppUser user = new AppUser();
         BeanUtils.copyProperties(userDto, user);
         encodePassword(user, userDto);
-        UserRole role = roleRepository.findByName("user").get();//should never fail
+        UserRole role = roleRepository.findByName("ROLE_USER").get();//should never fail
         Set<UserRole> roles = new HashSet<>();
         roles.add(role);
         user.setRoles(roles);//add to "user" role by default

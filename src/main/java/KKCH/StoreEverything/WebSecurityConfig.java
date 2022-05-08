@@ -53,9 +53,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .expressionHandler(webExpressionHandler())
                     .antMatchers( "/user/register","/user/login","/").anonymous()
-                    .antMatchers("/resources/**").permitAll()
-                    .antMatchers("/information/**").access("(hasRole('user')) and isAuthenticated()")//wszystkie endpointy do dodania
-                    .antMatchers("/user/addRole", "/user/removeRole").access("(hasRole('admin')) and isAuthenticated()")
+                    .antMatchers("/resources/**").access("(hasRole('ROLE_ADMIN')) and isAuthenticated()")
+                    .antMatchers("/information/**").access("(hasRole('ROLE_USER')) and isAuthenticated()")//wszystkie endpointy do dodania
+                    .antMatchers("/user/addRole", "/user/removeRole").access("(hasRole('ROLE_ADMIN')) and isAuthenticated()")
                     //.antMatchers("/*").rememberMe()//jesli bedziemy tego używać
                     .anyRequest()//wszystko inne wymaga autentykacji domyślnie
                     .authenticated()//wszystko inne wymaga autentykacji domyślnie
@@ -88,7 +88,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        String hierarchy = "admin > user\nuser > limitedUser";
+        String hierarchy = "ROLE_ADMIN > ROLE_USER \n ROLE_USER > ROLE_LIMITEDUSER";//separator - \n
         roleHierarchy.setHierarchy(hierarchy);
         return roleHierarchy;
     }

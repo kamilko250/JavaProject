@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements CustomUserDetailsService {
     public UserDetails loadUserByLogin(String login) throws Exception {
         Optional<AppUser> optUser = userRepository.findByLogin(login);
         if (optUser.isEmpty()) {
-            optUser = userRepository.findByName(login);
+            optUser = userRepository.findByName(login);//przy logowaniu wewnątrz używane jest loadUserByUsername, więc w ten sposób jest "obejście"
             if(optUser.isEmpty()) {
                 throw new Exception(String.format("Name: '%s' not found", login));
             }
