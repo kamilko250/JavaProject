@@ -80,11 +80,11 @@ public class AppUserController {
         appUserService.logout();
     }
 
-    /*@PostMapping("/addRole")
+    @PostMapping("/addRole")
     public void addToRole(@RequestParam Long userId, @RequestParam String roleName){ roleService.addToRole(userId, roleName);}
 
     @PostMapping("/removeRole")
-    public void removeFromRole(@RequestParam Long userId, @RequestParam String roleName){ roleService.removeFromRole(userId, roleName);}*/
+    public void removeFromRole(@RequestParam Long userId, @RequestParam String roleName){ roleService.removeFromRole(userId, roleName);}
 
     @Autowired
     public void setModelMapper (ModelMapper modelMapper) {

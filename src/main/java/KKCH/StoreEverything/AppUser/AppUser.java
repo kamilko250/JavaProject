@@ -6,6 +6,7 @@ import KKCH.StoreEverything.Role.UserRole;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,7 @@ public class AppUser {
     private String email;
     private String password;
     private Integer age;
-    
+
     @OneToMany(
             mappedBy = "appUser",
             fetch = FetchType.LAZY,
@@ -155,5 +156,9 @@ public class AppUser {
                 ", email='" + email + '\'' +
                 ", age=" + age +
                 '}';
+    }
+
+    public List<String> getRolesList(){
+        return roles.stream().map(UserRole::getName).toList();
     }
 }
