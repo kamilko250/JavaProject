@@ -17,7 +17,7 @@ public class UsersController {
     @GetMapping("")
     public String getList(Model model){
         model.addAttribute("users",userService.getAll());
-        return "user-list";
+    return "user-list";
     }
 
     @GetMapping("/{id}")

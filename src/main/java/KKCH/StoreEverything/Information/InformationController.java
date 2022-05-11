@@ -1,5 +1,6 @@
 package KKCH.StoreEverything.Information;
 
+import KKCH.StoreEverything.AppUser.AppUserService;
 import KKCH.StoreEverything.Category.CategoryDto;
 import KKCH.StoreEverything.Category.CategoryOrm;
 import KKCH.StoreEverything.Category.CategoryService;
@@ -24,6 +25,8 @@ public class InformationController {
     private InformationService informationService;
     private ModelMapper modelMapper;
     private CategoryService categoryService;
+    @Autowired
+    private AppUserService userService;
 
     @GetMapping("/add")
     public String showInformationForm( Model model) {
@@ -159,6 +162,7 @@ public class InformationController {
 
     @GetMapping("/{id}")
     public String getInformationById(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("users", userService.getAll());
         Optional<InformationOrm> informationOrm = informationService.getById(id);
         if(informationOrm.isPresent())
             model.addAttribute("information", modelMapper.map(informationOrm.get(), InformationDto.class));
