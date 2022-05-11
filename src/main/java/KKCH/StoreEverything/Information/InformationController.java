@@ -1,12 +1,15 @@
 package KKCH.StoreEverything.Information;
 
+import KKCH.StoreEverything.AppUser.AppUser;
 import KKCH.StoreEverything.AppUser.AppUserService;
+import KKCH.StoreEverything.AppUser.CustomUser;
 import KKCH.StoreEverything.Category.CategoryDto;
 import KKCH.StoreEverything.Category.CategoryOrm;
 import KKCH.StoreEverything.Category.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.net.Authenticator;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -25,7 +29,6 @@ public class InformationController {
     private InformationService informationService;
     private ModelMapper modelMapper;
     private CategoryService categoryService;
-    @Autowired
     private AppUserService userService;
 
     @GetMapping("/add")
@@ -56,7 +59,7 @@ public class InformationController {
 
     @Transactional
     @PostMapping("/add")
-    public String addInformation (@Valid @ModelAttribute("information")  InformationDto information, BindingResult result, Model model) {
+    public String addInformation (@Valid @ModelAttribute("information")InformationDto information, BindingResult result, Model model, Authentication auth) {
         if (result.hasErrors()) {
             return "add-information";
         }
@@ -65,7 +68,19 @@ public class InformationController {
 
         InformationOrm informationOrm = modelMapper.map(information,InformationOrm.class);
 
+        CustomUser user = null;
+        AppUser allowed = null;
+        if(auth != null) {
+            user = (CustomUser) auth.getPrincipal();
+            allowed = this.userService.get(user.getId());
+            List<AppUser> appUsers = new ArrayList<>();
+            appUsers.add(allowed);
+            informationOrm.addAllowedUsers(appUsers);
+        }
+
         informationService.create(informationOrm);
+
+
         return "redirect:/";
     }
 
@@ -191,4 +206,7 @@ public class InformationController {
     public void setCategoryService (CategoryService categoryService) {
         this.categoryService = categoryService;
     }
+
+    @Autowired
+    public void setUserService (AppUserService appUserService) { this.userService = appUserService; }
 }

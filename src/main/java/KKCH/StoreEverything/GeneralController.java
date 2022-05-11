@@ -1,6 +1,7 @@
 package KKCH.StoreEverything;
 
 
+import KKCH.StoreEverything.AppUser.AppUser;
 import KKCH.StoreEverything.AppUser.AppUserService;
 import KKCH.StoreEverything.AppUser.CustomUser;
 import KKCH.StoreEverything.Information.InformationDto;
@@ -36,17 +37,38 @@ public class GeneralController {
 
     @GetMapping("/share/{id}")
     public String showSharedInformation (
+            Authentication auth,
             @PathVariable("id")
                     Long id, Model
                     model
     ) {
-        // valid if user has occess or is link public
+
+
 
         Optional<InformationOrm> informationOrm = informationService.getById(id);
-        if (informationOrm.isPresent())
-            model.addAttribute("information", modelMapper.map(informationOrm.get(), InformationDto.class));
+        if (informationOrm.isPresent()) {
+            InformationOrm information = informationOrm.get();
+            if(!information.isPublic())
+            {
+                CustomUser user = null;
+                AppUser allowed = null;
+                if(auth != null) {
+                    user = (CustomUser) auth.getPrincipal();
+                    allowed = service.get(user.getId());
+                }
+                else
+                    return "redirect:/";
 
-        return "shared_information";
+                if (information.isUserAllowed(allowed))
+                {
+                    model.addAttribute("information", modelMapper.map(informationOrm.get(), InformationDto.class));
+                    return "shared_information";
+                }
+                else
+                    return "redirect:/";
+            }
+        }
+        return "redirect:/";
     }
 
     @Autowired

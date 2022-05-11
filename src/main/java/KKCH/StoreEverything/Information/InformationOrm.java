@@ -6,6 +6,8 @@ import KKCH.StoreEverything.Category.CategoryOrm;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "information")
@@ -18,12 +20,17 @@ public class InformationOrm {
     private String title;
     @Column(nullable = false, length = 500)
     private String content;
-    private String link;
 
     //TODO (temporary) add non null to column definition and must be assigned by default to logged user
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "appuser_id")
+    @ManyToOne()
     private AppUser appUser;
+
+    @ManyToMany
+    private List<AppUser> allowedUsers = new ArrayList<>();
+
+    private boolean isPublic;
+
+    private String link;
 
     private LocalDate addDate;
     private LocalDateTime remimderDate;
@@ -33,16 +40,30 @@ public class InformationOrm {
     private CategoryOrm category;
 
 
-    public InformationOrm (String title, String content, String link, LocalDate addDate, CategoryOrm category, AppUser user) {
+    public InformationOrm(String title, String content, LocalDate addDate, CategoryOrm category, AppUser user, boolean isPublic, String link) {
         this.title = title;
         this.content = content;
-        this.link = link;
         this.addDate = addDate;
         this.category = category;
         this.appUser = user;
+        this.isPublic = isPublic;
+        this.link = link;
+        var allow = new ArrayList<AppUser>();
+        allow.add(user);
+        addAllowedUsers(allow);
     }
 
     public InformationOrm() {
+    }
+
+    public void addAllowedUsers(List<AppUser> appUser)
+    {
+        allowedUsers.addAll(appUser);
+    }
+
+    public boolean isUserAllowed(AppUser appUser)
+    {
+        return allowedUsers.contains(appUser);
     }
 
     public CategoryOrm getCategory () {
@@ -78,13 +99,6 @@ public class InformationOrm {
         this.content = content;
     }
 
-    public String getLink () {
-        return link;
-    }
-
-    public void setLink (String link) {
-        this.link = link;
-    }
 
     public LocalDate getAddDate () {
         return addDate;
@@ -108,5 +122,21 @@ public class InformationOrm {
 
     public void setAppUser(AppUser appUser) {
         this.appUser = appUser;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 }

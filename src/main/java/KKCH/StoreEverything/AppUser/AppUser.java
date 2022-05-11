@@ -4,10 +4,7 @@ import KKCH.StoreEverything.Information.InformationOrm;
 import KKCH.StoreEverything.Role.UserRole;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -26,12 +23,14 @@ public class AppUser {
     private String password;
     private Integer age;
 
-    @OneToMany(
-            mappedBy = "appUser",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
+    @ManyToMany(
+            fetch = FetchType.LAZY
     )
-    private Set<InformationOrm> informationOrms;
+    @JoinTable(
+            name = "user_information",
+            joinColumns = @JoinColumn(name = "appUser_id"),
+            inverseJoinColumns = @JoinColumn(name = "information_id"))
+    private List<InformationOrm> ownedInformations;
 
     @ManyToMany(
             fetch = FetchType.EAGER
@@ -72,6 +71,10 @@ public class AppUser {
         this.age = age;
         this.login = login;
         this.roles = roles;
+    }
+
+    public void addInformation(InformationOrm informationOrm){
+        this.ownedInformations.add(informationOrm);
     }
 
     public Long getId() {
@@ -122,14 +125,6 @@ public class AppUser {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public List<InformationOrm> getInformationOrms() {
-        return informationOrms.stream().toList();
-    }
-
-    public void setInformationOrms(List<InformationOrm> informationOrms) {
-        this.informationOrms = informationOrms.stream().collect(Collectors.toSet());
     }
 
     public Set<UserRole> getRoles() {
