@@ -97,9 +97,9 @@
 
 </body>
 
-<script>
+<script S>
 
-const id = document.getElementById("public").value;
+const id = document.getElementById("id").value;
 const sharelink = document.getElementById("sharelink");
 document.getElementById("public").addEventListener("click",()=>{
       fetch(`http://${window.location.host}/sharing/public`, {
@@ -107,7 +107,7 @@ document.getElementById("public").addEventListener("click",()=>{
         headers: {
             'Content-Type': 'application/json'
         },
-        body: 5
+        body: id
     }).then(x => x.text()).then(x => {
         console.log(x);
         sharelink.href = x;
@@ -121,7 +121,7 @@ document.getElementById("shareform").style.visibility="initial";
 document.getElementById("shareform").addEventListener("submit",(event)=>{
     event.preventDefault();
     const list = Array.from(document.querySelectorAll("input[type='checkbox']:checked")).map(x=>x.value);
-      fetch(`http://${window.location.host}/sharing/users?id=${1}`, {
+      fetch(`http://${window.location.host}/sharing/users?id=${id}`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
