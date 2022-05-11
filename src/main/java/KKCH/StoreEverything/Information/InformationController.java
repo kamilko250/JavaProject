@@ -87,7 +87,7 @@ public class InformationController {
     @GetMapping("/list")
     public String getAllInformations(@RequestParam(name = "startDate",required = false) String startDate, @RequestParam(name = "category", required = false) String selectedCategory,
                                      @RequestParam(name="endDate", required = false) String endDate, @RequestParam(name="sort", required = false) String sort, Model  model, HttpServletResponse response,
-                                     @CookieValue(value = "sort", defaultValue = "date_asc") String sortCookie){
+                                     @CookieValue(value = "sort", defaultValue = "date_asc") String sortCookie, Authentication auth){
         LocalDate StartDate = startDate == null || startDate.isEmpty()
                 ? LocalDate.now()
                 : LocalDate.parse(startDate);
@@ -107,6 +107,12 @@ public class InformationController {
 
         List<InformationOrm> filteredInformationOrms = new ArrayList<InformationOrm>() ;
 
+        CustomUser user = null;
+        AppUser allowed = null;
+        if(auth != null) {
+            user = (CustomUser) auth.getPrincipal();
+            allowed = userService.get(user.getId());
+        }
 
         for(var inf : informationOrms)
         {
@@ -115,6 +121,8 @@ public class InformationController {
             if(startDate != null && startDate != "" && inf.getAddDate().isBefore(StartDate))
                 continue;
             if(endDate != null &&  endDate != "" && inf.getAddDate().isAfter(EndDate))
+                continue;
+            if(!inf.isUserAllowed(allowed))
                 continue;
 
             filteredInformationOrms.add(inf);
@@ -209,4 +217,5 @@ public class InformationController {
 
     @Autowired
     public void setUserService (AppUserService appUserService) { this.userService = appUserService; }
+
 }
