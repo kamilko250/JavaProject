@@ -54,12 +54,6 @@ public class UserRoleService {
         RoleCheckInterceptor.userIdsWithUpdatedRoles.add(user.getId());
     }
 
-
-    public void refreshToken(){
-
-    }
-
-
     @Autowired
     public void setUserRepository(AppUserRepository userRepository) {
         this.userRepository = userRepository;
