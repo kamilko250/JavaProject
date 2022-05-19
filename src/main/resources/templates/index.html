@@ -9,13 +9,17 @@
 <body>
 <header th:insert="general_fragment.html :: nav"></header>
 
-<div th:if="${userdata} != null" class="text-center">
+<div sec:authorize="isAuthenticated()" th:if="${userdata} != null" class="text-center">
     <h2 th:text="'Welcome '+ ${userdata.name}+' '+ ${userdata.surname}"></h2>
 
     <a th:href="@{/users/}+${userdata.id}">
         <button class="btn  btn-dark">Edit your data</button>
     </a>
 
+</div>
+
+<div sec:authorize="isAnonymous()">
+    <h2>Hello in Store Everythink!</h2>
 </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

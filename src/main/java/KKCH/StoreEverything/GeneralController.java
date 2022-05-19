@@ -42,13 +42,10 @@ public class GeneralController {
                     Long id, Model
                     model
     ) {
-
-
-
         Optional<InformationOrm> informationOrm = informationService.getById(id);
         if (informationOrm.isPresent()) {
             InformationOrm information = informationOrm.get();
-            if(!information.isPublic())
+            if(information.isPublic())
             {
                 CustomUser user = null;
                 AppUser allowed = null;

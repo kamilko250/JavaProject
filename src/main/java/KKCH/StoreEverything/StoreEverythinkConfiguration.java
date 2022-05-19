@@ -32,7 +32,7 @@ public class StoreEverythinkConfiguration {
             repository.create(information2);
 
             InformationOrm information3 = new InformationOrm(
-                    "Title 3", "Content 3", LocalDate.now(), new CategoryOrm("cars"), users.get(0), false,"https://google.com"
+                    "Title 3", "Content 3", LocalDate.now(), new CategoryOrm("cars"), users.get(1), false,"https://google.com"
                     );
             repository.create(information3);
         };

@@ -22,7 +22,8 @@
 
     <div>
         Share link:
-        <a id="sharelink"></a>
+        <a th:if="!information.isPublic" id="sharelink"></a>
+        <a th:if="information.isPublic" th:href="@{/share/}+${information.id}"th:text="${'http://localhost:8080/share/'+information.id}" ></a>
     </div>
 
     <a class="nav-link active" aria-current="page" th:href="@{/information/}+${information.id}+@{/edit}">
@@ -37,7 +38,7 @@
 </div>
 
 <div id="sharing" style="margin:20px;m">
-    <button class="btn btn-primary" type="submit" id="public">Public share</button>
+    <button class="btn btn-primary" th:if="information.public" type="submit" id="public">Public share</button>
     <button class="btn btn-primary" type="submit" id="users">Share for users</button>
 </div>
 
@@ -73,7 +74,7 @@ document.getElementById("public").addEventListener("click",()=>{
         },
         body: id
     }).then(x => x.text()).then(x => {
-        console.log(x);
+          document.getElementById("public").style.display="none";
         sharelink.href = x;
         sharelink.textContent = x;
     });

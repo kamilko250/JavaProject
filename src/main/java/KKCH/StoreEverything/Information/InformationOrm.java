@@ -63,7 +63,7 @@ public class InformationOrm {
 
     public boolean isUserAllowed(AppUser appUser)
     {
-        return allowedUsers.contains(appUser);
+        return allowedUsers.contains(appUser) || isPublic;
     }
 
     public CategoryOrm getCategory () {

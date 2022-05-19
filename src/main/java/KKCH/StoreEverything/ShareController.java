@@ -39,10 +39,11 @@ public class ShareController {
         //   should return full address for shared element exampole: http://localhost:8080/shared/1
         // share based on link TODO for id
 
-        Optional<InformationOrm>  informationOrm = informationService.getById(Long.valueOf(informationId));
+        Optional<InformationOrm>  informationOrm = informationService.getById((long) informationId);
         if(informationOrm.isPresent()) {
             InformationOrm information = informationOrm.get();
             information.setPublic(true);
+            informationService.update(information);
             return "http://localhost:8080/share/" + information.getId();
         }
         return ".|.";

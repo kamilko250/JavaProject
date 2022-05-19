@@ -105,7 +105,7 @@ public class InformationController {
                 categoryOrm = categoryOrm1.get();
         }
 
-        List<InformationOrm> filteredInformationOrms = new ArrayList<InformationOrm>() ;
+        List<InformationOrm> filteredInformationOrms = new ArrayList<>() ;
 
         CustomUser user = null;
         AppUser allowed = null;
@@ -116,13 +116,16 @@ public class InformationController {
 
         for(var inf : informationOrms)
         {
-            if(categoryOrm != null && inf.getCategory().getId() != categoryOrm.getId())
+            if(categoryOrm != null && !inf.getCategory()
+                    .getId()
+                    .equals(categoryOrm.getId()))
                 continue;
-            if(startDate != null && startDate != "" && inf.getAddDate().isBefore(StartDate))
+            if(startDate != null && !startDate.equals("") && inf.getAddDate().isBefore(StartDate))
                 continue;
-            if(endDate != null &&  endDate != "" && inf.getAddDate().isAfter(EndDate))
+            if(endDate != null && !endDate.equals("") && inf.getAddDate().isAfter(EndDate))
                 continue;
-            if(!inf.isUserAllowed(allowed))
+            if(!inf.isUserAllowed(allowed) || !inf.getAppUser().getId().equals(Objects.requireNonNull(user)
+                                                                                      .getId()))
                 continue;
 
             filteredInformationOrms.add(inf);
