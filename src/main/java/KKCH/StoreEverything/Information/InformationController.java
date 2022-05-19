@@ -99,7 +99,7 @@ public class InformationController {
         String finalSelectedCategory = selectedCategory;
         List<InformationOrm> informationOrms = informationService.getAll();
         CategoryOrm categoryOrm = null;
-        if(selectedCategory != null && selectedCategory != "") {
+            if(selectedCategory != null && selectedCategory != "") {
             Optional<CategoryOrm> categoryOrm1 =  categoryService.getAll().stream().filter(x-> x.getName().equals(finalSelectedCategory)).findFirst();
             if(categoryOrm1.isPresent())
                 categoryOrm = categoryOrm1.get();
