@@ -2,14 +2,15 @@ package KKCH.StoreEverything;
 
 import KKCH.StoreEverything.AppUser.AppUser;
 import KKCH.StoreEverything.AppUser.AppUserService;
+import KKCH.StoreEverything.AppUser.CustomUser;
+import KKCH.StoreEverything.Information.InformationDto;
 import KKCH.StoreEverything.Information.InformationOrm;
 import KKCH.StoreEverything.Information.InformationService;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,9 @@ public class ShareController {
 
     @Autowired
     private AppUserService appUserService;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     public ShareController(InformationService informationService, AppUserService appUserService) {
         this.informationService = informationService;
@@ -54,8 +58,9 @@ public class ShareController {
         for(var user : users)
         {
             AppUser appUser = appUserService.get(Long.valueOf(user));
-            if(appUser != null)
+            if(appUser != null) {
                 allowedUsers.add(appUser);
+            }
         }
 
         Optional<InformationOrm>  informationOrm = informationService.getById(Long.valueOf(id));
@@ -67,5 +72,22 @@ public class ShareController {
 
         }
         return "";
+    }
+
+    @GetMapping("/blabla")
+    public List<InformationDto> sharedInfoForCurrentUser(Authentication auth){
+        CustomUser user = null;
+        AppUser currentUser = null;
+        if(auth != null) {
+            user = (CustomUser) auth.getPrincipal();
+            currentUser = appUserService.get(user.getId());
+            AppUser finalCurrentUser = currentUser;
+            List<InformationOrm> orms = informationService.getAll().stream().filter(x->x.isUserAllowed(finalCurrentUser)).toList();
+            List<InformationDto> dtos = modelMapper.map(orms, new TypeToken<List<InformationDto>>() {}.getType());
+
+            return dtos;
+        }
+        else
+            return new ArrayList<>();
     }
 }
