@@ -2,6 +2,7 @@ package KKCH.StoreEverything.Role;
 
 import KKCH.StoreEverything.AppUser.AppUser;
 import KKCH.StoreEverything.AppUser.AppUserRepository;
+import KKCH.StoreEverything.Security.RoleCheckInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
@@ -30,6 +31,8 @@ public class UserRoleService {
         if(roles.add(role)){
             userRepository.save(user);
         }
+
+        RoleCheckInterceptor.userIdsWithUpdatedRoles.add(user.getId());
     }
 
     public void removeFromRole(Long userId, String roleName){
@@ -47,6 +50,8 @@ public class UserRoleService {
         if(roles.remove(role)){
             userRepository.save(user);
         }
+
+        RoleCheckInterceptor.userIdsWithUpdatedRoles.add(user.getId());
     }
 
     @Autowired
