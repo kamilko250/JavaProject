@@ -30,7 +30,11 @@ public class GeneralController {
     public String showInformationForm (Authentication auth, Model model) {
         if (auth != null) {
             CustomUser user = (CustomUser) auth.getPrincipal();
-            model.addAttribute("userdata", service.get(user.getId()));
+            var appuser= service.get(user.getId());
+            model.addAttribute("userdata",appuser);
+            var informationList = informationService.getSharedInformationForUser(appuser);
+            model.addAttribute("InformationList",informationList);
+
         }
         return "index";
     }
@@ -43,27 +47,22 @@ public class GeneralController {
                     model
     ) {
         Optional<InformationOrm> informationOrm = informationService.getById(id);
+
+        CustomUser user = null;
+        AppUser allowed = null;
+        if (auth != null) {
+            user = (CustomUser) auth.getPrincipal();
+            allowed = service.get(user.getId());
+        } else
+            return "redirect:/";
         if (informationOrm.isPresent()) {
             InformationOrm information = informationOrm.get();
-            if(information.isPublic())
+            if(information.isPublic() || information.isUserAllowed(allowed))
             {
-                CustomUser user = null;
-                AppUser allowed = null;
-                if(auth != null) {
-                    user = (CustomUser) auth.getPrincipal();
-                    allowed = service.get(user.getId());
-                }
-                else
-                    return "redirect:/";
-
-                if (information.isUserAllowed(allowed))
-                {
-                    model.addAttribute("information", modelMapper.map(informationOrm.get(), InformationDto.class));
-                    return "shared_information";
-                }
-                else
-                    return "redirect:/";
-            }
+                model.addAttribute("information", modelMapper.map(informationOrm.get(), InformationDto.class));
+                return "shared_information";
+            } else
+                 return "redirect:/";
         }
         return "redirect:/";
     }

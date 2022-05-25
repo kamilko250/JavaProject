@@ -1,5 +1,6 @@
 package KKCH.StoreEverything.Information;
 
+import KKCH.StoreEverything.AppUser.AppUserDto;
 import KKCH.StoreEverything.Category.CategoryDto;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,7 +29,7 @@ public class InformationDto {
     private LocalDateTime reminderDate;
     @NotNull(message = "Category cannot be empty")
     private CategoryDto category;
-
+    private AppUserDto appUser;
     public InformationDto(){}
 
     public InformationDto(CategoryDto category){
@@ -89,6 +90,14 @@ public class InformationDto {
 
     public void setReminderDate (LocalDateTime reminderDate) {
         this.reminderDate = reminderDate;
+    }
+
+    public AppUserDto getAppUser () {
+        return appUser;
+    }
+
+    public void setAppUser (AppUserDto appUser) {
+        this.appUser = appUser;
     }
 
     @Override

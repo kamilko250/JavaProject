@@ -34,6 +34,7 @@ public class StoreEverythinkConfiguration {
             InformationOrm information3 = new InformationOrm(
                     "Title 3", "Content 3", LocalDate.now(), new CategoryOrm("cars"), users.get(1), false,"https://google.com"
                     );
+            information3.addAllowedUser(users.get(0));
             repository.create(information3);
         };
     }

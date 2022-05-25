@@ -69,13 +69,14 @@ public class ShareController {
         {
             informationOrm.get().addAllowedUsers(allowedUsers);
             informationOrm.get().setPublic(false);
+            informationService.update(informationOrm.get());
             return "http://localhost:8080/share/" + informationOrm.get().getId();
 
         }
         return "";
     }
 
-    @GetMapping("/blabla")
+//    @GetMapping("/nothing")
     public List<InformationDto> sharedInfoForCurrentUser(Authentication auth){
         CustomUser user = null;
         AppUser currentUser = null;

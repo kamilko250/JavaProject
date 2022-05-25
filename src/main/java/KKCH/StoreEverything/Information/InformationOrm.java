@@ -48,9 +48,9 @@ public class InformationOrm {
         this.appUser = user;
         this.isPublic = isPublic;
         this.link = link;
-        var allow = new ArrayList<AppUser>();
-        allow.add(user);
-        addAllowedUsers(allow);
+//        var allow = new ArrayList<AppUser>();
+//        allow.add(user);
+//        addAllowedUsers(allow);
     }
 
     public InformationOrm() {
@@ -60,6 +60,11 @@ public class InformationOrm {
     {
         allowedUsers.addAll(appUser);
     }
+
+    public void addAllowedUser (AppUser appUser) {
+        allowedUsers.add(appUser);
+    }
+
 
     public boolean isUserAllowed(AppUser appUser)
     {

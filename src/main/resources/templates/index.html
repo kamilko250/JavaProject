@@ -16,6 +16,17 @@
         <button class="btn  btn-dark">Edit your data</button>
     </a>
 
+    <h3>Shared information for you</h3>
+    <div class="container d-flex">
+
+        <div class="card" style="width: 18rem;" th:each="information :${InformationList}">
+            <div class="card-body">
+                <h4 class="card-title" th:text="${information.title}"></h4>
+                <h6 class="card-subtitle mb-2 text-muted" th:text="${information.title +' '+information.addDate}"></h6>
+                <a th:href="@{/share/}+${information.id}" class="card-link">Show</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div sec:authorize="isAnonymous()">

@@ -69,13 +69,12 @@ public class InformationController {
         InformationOrm informationOrm = modelMapper.map(information,InformationOrm.class);
 
         CustomUser user = null;
-        AppUser allowed = null;
+        AppUser creator = null;
         if(auth != null) {
             user = (CustomUser) auth.getPrincipal();
-            allowed = this.userService.get(user.getId());
-            List<AppUser> appUsers = new ArrayList<>();
-            appUsers.add(allowed);
-            informationOrm.addAllowedUsers(appUsers);
+            creator = this.userService.get(user.getId());
+
+            informationOrm.setAppUser(creator);
         }
 
         informationService.create(informationOrm);
@@ -124,8 +123,8 @@ public class InformationController {
                 continue;
             if(endDate != null && !endDate.equals("") && inf.getAddDate().isAfter(EndDate))
                 continue;
-            if(!inf.isUserAllowed(allowed) || !inf.getAppUser().getId().equals(Objects.requireNonNull(user)
-                                                                                      .getId()))
+            if(!(inf.isUserAllowed(allowed) || inf.getAppUser().getId().equals(Objects.requireNonNull(user)
+                                                                                      .getId())))
                 continue;
 
             filteredInformationOrms.add(inf);
