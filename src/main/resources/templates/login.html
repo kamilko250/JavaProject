@@ -71,7 +71,7 @@
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
-        <div id="toastSuccess" class="toast success"  style="display: none;color: green" >
+        <div id="toastSuccess" class="toast success" style="display: none;color: green">
             <div class="toast-header">
                 <strong class="me-auto">Register successfull</strong>
             </div>
@@ -117,24 +117,25 @@
                 body: JSON.stringify(submitObject)
             }).then(x => x).then(x => {
                 if (form != REGISTER_KEY) {
-                  if(x.status<400){
-                      window.location.replace(`http://${window.location.host}/`);
+                    if (x.status < 400 && x.url !== `http://${window.location.host}/login`) {
+                        window.location.replace(`http://${window.location.host}/`);
 
-                  } else {
-                      myAlert = document.getElementById('logintoastFailed');//select id of toast
-                      myAlert.style.display = "block";
-                  }
-                }
-                if(x.status>399) {
-                    var myAlert = document.getElementById('toastSuccess');
-                    myAlert.style.display = "none";
-                    myAlert = document.getElementById('toastFailed');//select id of toast
-                    myAlert.style.display = "block";
-                }else{
-                    var myAlert = document.getElementById('toastSuccess');
-                    myAlert.style.display = "block";
-                    myAlert = document.getElementById('toastFailed');//select id of toast
-                    myAlert.style.display = "none";
+                    } else {
+                        myAlert = document.getElementById('logintoastFailed');//select id of toast
+                        myAlert.style.display = "block";
+                    }
+                } else {
+                    if (x.status > 399) {
+                        var myAlert = document.getElementById('toastSuccess');
+                        myAlert.style.display = "none";
+                        myAlert = document.getElementById('toastFailed');//select id of toast
+                        myAlert.style.display = "block";
+                    } else {
+                        var myAlert = document.getElementById('toastSuccess');
+                        myAlert.style.display = "block";
+                        myAlert = document.getElementById('toastFailed');//select id of toast
+                        myAlert.style.display = "none";
+                    }
                 }
             }).catch(e => {
                 }
