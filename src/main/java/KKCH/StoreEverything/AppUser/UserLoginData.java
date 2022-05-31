@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 public class UserLoginData {
     @NotEmpty
     @NotNull
-    @Pattern(regexp = "^[a-z]*$")
+    @Pattern(message = "Only small letter", regexp = "^([a-ząćęółżź\\d]){5,}$")
     private String login;
 
     @NotEmpty(message="Password required")

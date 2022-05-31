@@ -10,12 +10,12 @@ public class AppUserDto {
 
     @NotEmpty(message="Field required")
     @Size(max = 20, min = 2, message = "Name must be between 3 and 20 characters")
-    @Pattern(regexp = "^[A-Z].*")
+    @Pattern(regexp = "^[A-ZĄŻŹĆÓŁĘ][a-zążźćłóę]*(\\s[A-ZĄŻŹĆÓŁĘ][a-zążźćłóę]*)*$")
     private String name;
 
     @NotEmpty(message="Surname required")
     @Size(max = 50, min = 3, message = "Surname must be between 3 and 50 characters")
-    @Pattern(regexp = "^[A-Z].*")
+    @Pattern(regexp = "^[A-ZĄŻŹĆÓŁĘ][a-zążźćłóę]*(\\s[A-ZĄŻŹĆÓŁĘ][a-zążźćłóę]*)*$")
     private String surname;
 
     @NotEmpty(message="E-mail required")
@@ -31,7 +31,7 @@ public class AppUserDto {
     private Integer age;
 
     @NotEmpty
-    @Pattern(regexp = "^[a-z]*$")
+    @Pattern(message = "Only small letter", regexp = "^([a-ząćęółżź\\d]){5,}$")
     private String login;
 
     public String getName() {

@@ -34,7 +34,7 @@
             <div >
                 <label for="categoryId" class="form-label">Select category:</label>
                 <input class="form-control " th:field="*{category.name}" id="categoryId"
-                     list="categoryList"/>
+                     list="categoryList" pattern="^[a-ząćęółżź]+(\s[a-ząćęółżź]+)*$"/>
                 <datalist  id="categoryList"  aria-label="Category">
                     <option th:each="category:${categories}" th:value="${category.name}"
                             th:text="${category.name}"></option>

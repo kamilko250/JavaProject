@@ -12,7 +12,7 @@
 
 <div>
     <h1 th:text="${information.title}"></h1>
-    <div th:text="'Create date: '+ ${information.addDate} + '; Category: ' +${information.category.name}"></div>
+    <div th:text="'Create date: '+${#temporals.format(information.addDate, 'dd-MM-yyyy')}  + '; Category: ' +${information.category.name}"></div>
     <div th:if="${information.link != null}">Author: <span th:text="${information.appUser.name} +' '+${information.appUser.surname}"></span> </div>
 
     <div th:if="${information.link != null}">Link: <a th:href="@{${information.link}}" th:text="${information.link}"></a></div>

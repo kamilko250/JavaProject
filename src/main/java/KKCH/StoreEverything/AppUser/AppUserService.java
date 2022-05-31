@@ -66,6 +66,8 @@ public class AppUserService implements UserService {
                 userDto.getAge(),
                 userDto.getLogin()
         );
+        newAppUser.setRoles(appUser.get()
+                                    .getRoles());
         if (userDto.getPassword().equals("")) {
             newAppUser.setPassword(user.getPassword());
         } else {
