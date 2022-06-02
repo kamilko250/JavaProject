@@ -35,7 +35,7 @@ public class InformationOrm {
     private LocalDate addDate;
     private LocalDateTime remimderDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.MERGE,CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST})
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryOrm category;
 
@@ -65,6 +65,9 @@ public class InformationOrm {
         allowedUsers.add(appUser);
     }
 
+    public List<AppUser> getAllowedUsers () {
+        return allowedUsers;
+    }
 
     public boolean isUserAllowed(AppUser appUser)
     {

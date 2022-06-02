@@ -41,7 +41,11 @@ public class InformationService {
         return informationRepository.findById(id);
     }
 
-    public java.util.List<InformationOrm> getAll(){
+    public java.util.List<InformationOrm> getAll (AppUser user) {
+        return informationRepository.findAllByAppUser(user);
+    }
+
+    public java.util.List<InformationOrm> getAll () {
         return informationRepository.findAll();
     }
 

@@ -156,4 +156,6 @@ public class AppUser {
     public List<String> getRolesList(){
         return roles.stream().map(UserRole::getName).toList();
     }
+
+
 }

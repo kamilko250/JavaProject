@@ -22,7 +22,7 @@ public class StoreEverythinkConfiguration {
 
             var users = appUserService.getAll();
             InformationOrm information1 = new InformationOrm(
-                    "Title 1", "Content 1", LocalDate.now(), new CategoryOrm("food"), users.get(0), false, "https://google.com"
+                    "Title 1", "Content 1", LocalDate.parse("2022-01-01"), new CategoryOrm("food"), users.get(0), false, "https://google.com"
                     );
             repository.create(information1);
 

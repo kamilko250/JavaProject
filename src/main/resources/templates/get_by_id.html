@@ -22,8 +22,9 @@
 
     <div>
         Share link:
-        <a th:if="!information.isPublic" id="sharelink"></a>
-        <a th:if="information.isPublic" th:href="@{/share/}+${information.id}"th:text="${'http://localhost:8080/share/'+information.id}" ></a>
+        <a th:if="${information.isPublic} == false" id="sharelink"></a>
+        <a th:if="${information.isPublic} == true" th:href="@{/share/}+${information.id}"
+           th:text="${'http://localhost:8080/share/'+information.id}"></a>
     </div>
 
     <a class="nav-link active" aria-current="page" th:href="@{/information/}+${information.id}+@{/edit}">
@@ -37,25 +38,28 @@
 
 </div>
 
-<div id="sharing" style="margin:20px;m">
+<div id="sharing" style="margin:20px;">
     <button class="btn btn-primary" th:if="information.public" type="submit" id="public">Public share</button>
     <button class="btn btn-primary" type="submit" id="users">Share for users</button>
 </div>
 
 <form id="shareform" style="visibility: hidden">
     <table>
-    <tr th:each="user:${users}">
-        <td th:text="${user.name}+' '+${user.surname}"></td>
-        <td>
-            <label>
-                <input type="checkbox"
-                       th:value="${user.id}"
-                />
-                <span>Share</span>
-            </label>
+        <tr th:each="user:${users}">
+            <td th:text="${user.name}+' '+${user.surname}"></td>
+            <td>
+                <label>
+                    <span th:text="${#arrays.contains(information.allowedUsers, user)}"></span>
+                    <span th:text="${user.id}"></span>
+                    <span th:text="${information.allowedUsers[0].id}"></span>
+                    <input type="checkbox"
+                           th:value="${user.id}" th:checked="${#arrays.contains(information.allowedUsers, user)}"
+                    />
+                    <span>Share</span>
+                </label>
 
-        </td>
-    </tr>
+            </td>
+        </tr>
     </table>
     <button type="submit" class="btn btn-success">Share</button>
 </form>
@@ -64,40 +68,40 @@
 
 <script type="text/javascript">
 
-const id = document.getElementById("id").value;
-const sharelink = document.getElementById("sharelink");
-document.getElementById("public").addEventListener("click",()=>{
-      fetch(`http://${window.location.host}/sharing/public`, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: id
-    }).then(x => x.text()).then(x => {
-          document.getElementById("public").style.display="none";
-        sharelink.href = x;
-        sharelink.textContent = x;
+    const id = document.getElementById("id").value;
+    const sharelink = document.getElementById("sharelink");
+    document.getElementById("public").addEventListener("click", () => {
+        fetch(`http://${window.location.host}/sharing/public`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: id
+        }).then(x => x.text()).then(x => {
+            document.getElementById("public").style.display = "none";
+            sharelink.href = x;
+            sharelink.textContent = x;
+        });
+    })
+    document.getElementById("users").addEventListener("click", (event) => {
+        document.getElementById("shareform").style.visibility = "initial";
     });
-})
-document.getElementById("users").addEventListener("click",(event)=>{
-document.getElementById("shareform").style.visibility="initial";
-});
 
-document.getElementById("shareform").addEventListener("submit",(event)=>{
-    event.preventDefault();
-    const list = Array.from(document.querySelectorAll("input[type='checkbox']:checked")).map(x=>x.value);
-      fetch(`http://${window.location.host}/sharing/users?id=${id}`, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(list)
-    }).then(x => x.text()).then(x => {
-        console.log(x);
-        sharelink.href = x;
-        sharelink.textContent = x;
-    });
-})
+    document.getElementById("shareform").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const list = Array.from(document.querySelectorAll("input[type='checkbox']:checked")).map(x => x.value);
+        fetch(`http://${window.location.host}/sharing/users?id=${id}`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(list)
+        }).then(x => x.text()).then(x => {
+            console.log(x);
+            sharelink.href = x;
+            sharelink.textContent = x;
+        });
+    })
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

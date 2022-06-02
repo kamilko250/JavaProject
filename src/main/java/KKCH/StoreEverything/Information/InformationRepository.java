@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface InformationRepository extends JpaRepository<InformationOrm,Long> {
 
+    public List<InformationOrm> findAllByAppUser(AppUser user);
     public List<InformationOrm> findAllByAllowedUsers(AppUser user);
 }

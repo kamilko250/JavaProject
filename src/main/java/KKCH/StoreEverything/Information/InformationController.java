@@ -95,8 +95,15 @@ public class InformationController {
                 ? LocalDate.MAX
                 : LocalDate.parse(endDate);
 
+        CustomUser user = null;
+        AppUser allowed = null;
+        if (auth != null) {
+            user = (CustomUser) auth.getPrincipal();
+            allowed = userService.get(user.getId());
+        }
+
         String finalSelectedCategory = selectedCategory;
-        List<InformationOrm> informationOrms = informationService.getAll();
+        List<InformationOrm> informationOrms = informationService.getAll(allowed);
         CategoryOrm categoryOrm = null;
             if(selectedCategory != null && selectedCategory != "") {
             Optional<CategoryOrm> categoryOrm1 =  categoryService.getAll().stream().filter(x-> x.getName().equals(finalSelectedCategory)).findFirst();
@@ -105,13 +112,6 @@ public class InformationController {
         }
 
         List<InformationOrm> filteredInformationOrms = new ArrayList<>() ;
-
-        CustomUser user = null;
-        AppUser allowed = null;
-        if(auth != null) {
-            user = (CustomUser) auth.getPrincipal();
-            allowed = userService.get(user.getId());
-        }
 
         for(var inf : informationOrms)
         {
@@ -189,9 +189,9 @@ public class InformationController {
     public String getInformationById(@PathVariable("id") Long id, Model model) {
         model.addAttribute("users", userService.getAll());
         Optional<InformationOrm> informationOrm = informationService.getById(id);
-        if(informationOrm.isPresent())
+        if(informationOrm.isPresent()) {
             model.addAttribute("information", modelMapper.map(informationOrm.get(), InformationDto.class));
-
+        }
         return "get_by_id";
     }
 
