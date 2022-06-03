@@ -33,13 +33,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .disable()
                 .authorizeRequests()
                     .expressionHandler(webExpressionHandler())
-                    .antMatchers( "/user/register","/user/login","/").anonymous()
-                    .antMatchers("/resources/**").permitAll()
-                    .antMatchers("/information/**").access("(hasRole('ROLE_USER')) and isAuthenticated()")//wszystkie endpointy do dodania
+                    .antMatchers( "/user/register","/user/login","/", "/resources/**").anonymous()
+                    .antMatchers("/information/**").access("(hasRole('ROLE_USER')) and isAuthenticated()")
                     .antMatchers("/user/addRole", "/user/removeRole").access("(hasRole('ROLE_ADMIN')) and isAuthenticated()")
-                    //.antMatchers("/*").rememberMe()//jesli bedziemy tego używać
-                    .anyRequest()//wszystko inne wymaga autentykacji domyślnie
-                    .authenticated()//wszystko inne wymaga autentykacji domyślnie
+                    .anyRequest()
+                    .authenticated()
                     .and()
                 .formLogin()
                     .loginPage("/login")
