@@ -49,9 +49,6 @@
             <td th:text="${user.name}+' '+${user.surname}"></td>
             <td>
                 <label>
-                    <span th:text="${#arrays.contains(information.allowedUsers, user)}"></span>
-                    <span th:text="${user.id}"></span>
-                    <<span th:if="${information.allowedUsers} != null" th:text="${information.allowedUsers[0].id}"></span>
                     <input type="checkbox"
                            th:value="${user.id}" th:checked="${#arrays.contains(information.allowedUsers, user)}"
                     />
