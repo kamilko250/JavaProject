@@ -3,6 +3,7 @@ package KKCH.StoreEverything.AppUser;
 import KKCH.StoreEverything.Role.UserRole;
 import KKCH.StoreEverything.Role.UserRoleRepository;
 import KKCH.StoreEverything.Security.CustomUserDetailsService;
+import KKCH.StoreEverything.Utils.KKCHLogger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,9 +17,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 
 @Service("userService")
 public class AppUserService implements UserService {
+    public static final Logger log = KKCHLogger.getLogger();
     //---
     private final AppUserRepository appUserRepository;
     private final UserRoleRepository roleRepository;
@@ -81,6 +84,7 @@ public class AppUserService implements UserService {
         Optional<AppUser> appUser = appUserRepository.findById(userDto.getId());
         if (appUser.isPresent()) {
             appUserRepository.delete(appUser.get());
+            log.info("Removed user " + appUser.get().getLogin());
             return appUser.get();
         }
         return null;
@@ -99,6 +103,7 @@ public class AppUserService implements UserService {
         roles.add(role);
         user.setRoles(roles);//add to "user" role by default
         appUserRepository.save(user);
+        log.info("New user registered, login is " + user.getLogin());
 
         return user;
     }
@@ -107,6 +112,7 @@ public class AppUserService implements UserService {
     public void login (String login, String password) throws Exception {
         Optional<AppUser> appUser = appUserRepository.findByLogin(login);
         if (appUser.isEmpty()) {
+            log.warning(String.format("User %s not found!", login));
             throw new Exception("user not found");
         }
         UserDetails userDetails = userDetailsService.loadUserByLogin(login);
@@ -119,6 +125,7 @@ public class AppUserService implements UserService {
             SecurityContextHolder.getContext()
                     .setAuthentication(usernamePasswordAuthenticationToken);
         }
+        log.info(String.format("User %s logged in", login));
     }
 
     public void logout () {
@@ -132,7 +139,7 @@ public class AppUserService implements UserService {
                 .getAuthentication()
                 .getName();
         Optional<AppUser> optUser = appUserRepository.findByName(name);
-        if(optUser.isEmpty()) return null;//idk
+        if(optUser.isEmpty()) return null;
         AppUserDto userDto = new AppUserDto();
         BeanUtils.copyProperties(optUser.get(), userDto);
 

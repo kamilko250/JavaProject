@@ -2,10 +2,12 @@ package KKCH.StoreEverything;
 
 import KKCH.StoreEverything.AppUser.AppUser;
 import KKCH.StoreEverything.AppUser.AppUserRepository;
+import KKCH.StoreEverything.Consts.GlobalConsts;
 import KKCH.StoreEverything.Role.Privilege.Privilege;
 import KKCH.StoreEverything.Role.Privilege.PrivilegeRepository;
 import KKCH.StoreEverything.Role.UserRole;
 import KKCH.StoreEverything.Role.UserRoleRepository;
+import KKCH.StoreEverything.Utils.KKCHLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -13,14 +15,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
-
     boolean alreadySetup = false;
 
     @Autowired
@@ -41,6 +44,11 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         if (alreadySetup)
             return;
+
+        File directory = new File(GlobalConsts.loggerDirPath);
+        if (!directory.exists()){
+            directory.mkdir();
+        }
         Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
         Privilege writePrivilege = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
 

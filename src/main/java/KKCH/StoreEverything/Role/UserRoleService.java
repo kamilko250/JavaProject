@@ -3,12 +3,15 @@ package KKCH.StoreEverything.Role;
 import KKCH.StoreEverything.AppUser.AppUser;
 import KKCH.StoreEverything.AppUser.AppUserRepository;
 import KKCH.StoreEverything.Security.RoleCheckInterceptor;
+import KKCH.StoreEverything.Utils.KKCHLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Logger;
 
 public class UserRoleService {
+    public static final Logger log = KKCHLogger.getLogger();
     private UserRoleRepository roleRepository;
     private AppUserRepository userRepository;
 
@@ -33,6 +36,7 @@ public class UserRoleService {
         }
 
         RoleCheckInterceptor.userIdsWithUpdatedRoles.add(user.getId());
+        log.info(String.format("Added role %s to user %s", role.getName(), user.getLogin()));
     }
 
     public void removeFromRole(Long userId, String roleName){
@@ -52,6 +56,7 @@ public class UserRoleService {
         }
 
         RoleCheckInterceptor.userIdsWithUpdatedRoles.add(user.getId());
+        log.info(String.format("Removed role %s from user %s", role.getName(), user.getLogin()));
     }
 
     @Autowired

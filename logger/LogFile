@@ -1,0 +1,8 @@
+Jun 07, 2022 10:17:05 PM KKCH.StoreEverything.AppUser.AppUserService login
+INFO: User admin logged in
+Jun 07, 2022 10:17:07 PM KKCH.StoreEverything.Role.UserRoleService addToRole
+INFO: Added role ROLE_ADMIN to user usera
+Jun 07, 2022 10:17:08 PM KKCH.StoreEverything.Role.UserRoleService addToRole
+INFO: Added role ROLE_LIMITEDUSER to user usera
+Jun 07, 2022 10:17:08 PM KKCH.StoreEverything.Role.UserRoleService removeFromRole
+INFO: Removed role ROLE_USER from user usera
