@@ -27,5 +27,11 @@ public class InformationOrmTest {
     }
 
     @Test
-    public void
+    public void IsUserAllowedTest(){
+        AppUser appUser = new AppUser();
+        InformationOrm informationOrm = new InformationOrm();
+        informationOrm.addAllowedUser(appUser);
+
+        assert informationOrm.isUserAllowed(appUser);
+    }
 }
