@@ -1,6 +1,7 @@
 Autorzy:
 Kamil Kośko
 Cezary Hodun
+Łukasz Milewski
 
 Nazwa Projektu: 
 Store Everything - to store important data
@@ -15,8 +16,10 @@ Funkcjonalności:
 -rejestracja uzytkownika, logowanie, wylogowywanie
 -wyswietlanie listy uzytkownikow, zarzadzanie ich rolami, uwierzytelnianie, autoryzacja
 -logger
--unit testy ??????????????????????????????
+-unit testy - kilka podstawowych testów obiektów ORM
 
-Instrukcja zbudowania -> trzeba chyba cos dopisac
--serwer db - postgres JAKA WERSJA
+Instrukcja zbudowania:
+1. Application.properties dodać/zmienić connection string do lokalnej bazy, dane do logowania.
+2. maven build.
+-serwer db - postgres 14.2.2
 -java 18
