@@ -5,6 +5,9 @@ import KKCH.StoreEverything.Category.CategoryOrm;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
+import java.time.Month;
+
 @SpringBootTest
 public class InformationOrmTest {
 
@@ -33,5 +36,15 @@ public class InformationOrmTest {
         informationOrm.addAllowedUser(appUser);
 
         assert informationOrm.isUserAllowed(appUser);
+    }
+
+    @Test
+    public void DateTest(){
+        InformationOrm informationOrm = new InformationOrm();
+
+        LocalDate ld = LocalDate.now();
+        informationOrm.setAddDate(ld);
+
+        assert informationOrm.getAddDate() == ld;
     }
 }
