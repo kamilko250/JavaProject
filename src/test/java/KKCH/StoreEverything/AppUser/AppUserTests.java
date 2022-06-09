@@ -1,7 +1,5 @@
 package KKCH.StoreEverything.AppUser;
 
-import KKCH.StoreEverything.Category.CategoryOrm;
-import KKCH.StoreEverything.Information.InformationOrm;
 import KKCH.StoreEverything.Role.UserRole;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
