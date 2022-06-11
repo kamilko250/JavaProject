@@ -1,6 +1,5 @@
 package KKCH.StoreEverything.AppUser;
 
-import KKCH.StoreEverything.EmailSender.EmailService;
 import KKCH.StoreEverything.Role.UserRoleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

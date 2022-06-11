@@ -1,6 +1,6 @@
 package KKCH.StoreEverything.AppUser;
 
-import KKCH.StoreEverything.EmailSender.EmailService;
+import KKCH.StoreEverything.EmailSender.MailService;
 import KKCH.StoreEverything.Role.UserRole;
 import KKCH.StoreEverything.Role.UserRoleRepository;
 import KKCH.StoreEverything.Security.CustomUserDetailsService;
@@ -29,7 +29,7 @@ public class AppUserService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final CustomUserDetailsService userDetailsService;
     private final AuthenticationManager authenticationManager;
-    private final EmailService.MailService mailService;
+    private final MailService mailService;
 
 
     @Autowired
@@ -39,7 +39,7 @@ public class AppUserService implements UserService {
             UserRoleRepository roleRepository,
             CustomUserDetailsService userDetailsService,
             AuthenticationManager authenticationManager,
-            EmailService.MailService mailService) {
+            MailService mailService) {
         this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
