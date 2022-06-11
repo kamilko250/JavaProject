@@ -1,5 +1,6 @@
 package KKCH.StoreEverything.AppUser;
 
+import KKCH.StoreEverything.EmailSender.EmailService;
 import KKCH.StoreEverything.Role.UserRoleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +41,6 @@ public class AppUserController {
     public List<AppUser> getUsers () {
         return appUserService.getAll();
     }
-
-    /*//do usunięcia
-    @PostMapping()
-    public AppUser createUser (@Valid @RequestBody AppUserDto userDto) {
-        return appUserService.update(userDto);
-    }*/
 
     @PutMapping("/{id}")
     public AppUser updateUser (@Valid @RequestBody AppUserEditDto userDto, @PathVariable Long id) throws Exception {

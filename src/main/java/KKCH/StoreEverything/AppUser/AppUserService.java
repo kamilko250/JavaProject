@@ -1,5 +1,6 @@
 package KKCH.StoreEverything.AppUser;
 
+import KKCH.StoreEverything.EmailSender.EmailService;
 import KKCH.StoreEverything.Role.UserRole;
 import KKCH.StoreEverything.Role.UserRoleRepository;
 import KKCH.StoreEverything.Security.CustomUserDetailsService;
@@ -28,6 +29,8 @@ public class AppUserService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final CustomUserDetailsService userDetailsService;
     private final AuthenticationManager authenticationManager;
+    private final EmailService.MailService mailService;
+
 
     @Autowired
     public AppUserService(
@@ -35,12 +38,14 @@ public class AppUserService implements UserService {
             PasswordEncoder passwordEncoder,
             UserRoleRepository roleRepository,
             CustomUserDetailsService userDetailsService,
-            AuthenticationManager authenticationManager) {
+            AuthenticationManager authenticationManager,
+            EmailService.MailService mailService) {
         this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
+        this.mailService = mailService;
     }
 
     public AppUser get (Long id) {
@@ -103,6 +108,9 @@ public class AppUserService implements UserService {
         roles.add(role);
         user.setRoles(roles);//add to "user" role by default
         appUserRepository.save(user);
+
+        mailService.sendMail(user.getEmail(), "Registration", "Link to registration", false);
+
         log.info("New user registered, login is " + user.getLogin());
 
         return user;

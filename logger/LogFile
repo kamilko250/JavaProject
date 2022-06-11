@@ -6,3 +6,15 @@ Jun 07, 2022 10:17:08 PM KKCH.StoreEverything.Role.UserRoleService addToRole
 INFO: Added role ROLE_LIMITEDUSER to user usera
 Jun 07, 2022 10:17:08 PM KKCH.StoreEverything.Role.UserRoleService removeFromRole
 INFO: Removed role ROLE_USER from user usera
+cze 10, 2022 10:50:01 AM KKCH.StoreEverything.AppUser.AppUserService login
+INFO: User admin logged in
+cze 10, 2022 10:52:21 AM KKCH.StoreEverything.AppUser.AppUserService login
+INFO: User admin logged in
+cze 10, 2022 10:52:29 AM KKCH.StoreEverything.Role.UserRoleService addToRole
+INFO: Added role ROLE_LIMITEDUSER to user usera
+cze 10, 2022 10:52:30 AM KKCH.StoreEverything.Role.UserRoleService removeFromRole
+INFO: Removed role ROLE_USER from user usera
+cze 10, 2022 10:52:35 AM KKCH.StoreEverything.AppUser.AppUserService login
+INFO: User usera logged in
+cze 10, 2022 11:03:41 AM KKCH.StoreEverything.AppUser.AppUserService login
+INFO: User admin logged in
