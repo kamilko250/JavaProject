@@ -1,6 +1,8 @@
 package KKCH.StoreEverything.AppUser;
 
+import KKCH.StoreEverything.Enums.LoggerEnum;
 import KKCH.StoreEverything.Role.UserRoleService;
+import KKCH.StoreEverything.Utils.KKCHLogger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,11 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.util.List;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping(value = "/user")
 public class AppUserController {
 
+    private final Logger log = KKCHLogger.getLogger(LoggerEnum.USER);
     private final AppUserService appUserService;
     private final UserRoleService roleService;
     private ModelMapper modelMapper;
@@ -38,6 +42,7 @@ public class AppUserController {
 
     @GetMapping("/all")
     public List<AppUser> getUsers () {
+        log.fine("Invoked getUsers");
         return appUserService.getAll();
     }
 
@@ -47,6 +52,7 @@ public class AppUserController {
                 .equals("")) {
             var pass = userDto.getPassword();
             if (pass.equals("") || (pass.length() <5))
+                log.warning(String.format("User %s entered invalid password", userDto.getLogin()));
                 throw new ValidationException("Password is not valid");
         }
         userDto.setId(id);
@@ -66,6 +72,7 @@ public class AppUserController {
 
     @PostMapping("/login")
     public void login (@Valid @RequestBody UserLoginData loginData) throws Exception {
+        log.finest(String.format("Logging in user %s", loginData.getLogin()));
         appUserService.login(loginData.getLogin(), loginData.getPassword());
     }
 

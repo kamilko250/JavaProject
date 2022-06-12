@@ -2,6 +2,7 @@ package KKCH.StoreEverything.Role;
 
 import KKCH.StoreEverything.AppUser.AppUser;
 import KKCH.StoreEverything.AppUser.AppUserRepository;
+import KKCH.StoreEverything.Enums.LoggerEnum;
 import KKCH.StoreEverything.Security.RoleCheckInterceptor;
 import KKCH.StoreEverything.Utils.KKCHLogger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 public class UserRoleService {
-    public static final Logger log = KKCHLogger.getLogger();
+    private final Logger log = KKCHLogger.getLogger(LoggerEnum.ROLE);
     private UserRoleRepository roleRepository;
     private AppUserRepository userRepository;
 

@@ -6,6 +6,8 @@ import KKCH.StoreEverything.AppUser.CustomUser;
 import KKCH.StoreEverything.Category.CategoryDto;
 import KKCH.StoreEverything.Category.CategoryOrm;
 import KKCH.StoreEverything.Category.CategoryService;
+import KKCH.StoreEverything.Enums.LoggerEnum;
+import KKCH.StoreEverything.Utils.KKCHLogger;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +34,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Controller
 @RequestMapping("/information")
 public class InformationController {
+    private final Logger log = KKCHLogger.getLogger(LoggerEnum.INFORMATION);
     private InformationService informationService;
     private ModelMapper modelMapper;
     private CategoryService categoryService;
@@ -50,14 +54,19 @@ public class InformationController {
                 .map(category -> modelMapper.map(category, CategoryDto.class))
                 .toList();
         model.addAttribute("categories", categoryDtoList);
+        log.finest("Presented add information form");
         return "add-information";
     }
 
     @GetMapping("/{id}/edit")
     public String showEditForm (@PathVariable("id") Long id, Model model) {
         Optional<InformationOrm> information = informationService.getById(id);
-        if (!information.isPresent())
+        if (!information.isPresent()) {
+            log.warning("Failed to find information for edit with id "+ id);
             return "redirect:/";
+        }else{
+            log.finer("Successfully found information with id "+id);
+        }
         model.addAttribute("information", modelMapper.map(information.get(), InformationDto.class));
         List<CategoryDto> categoryDtoList = categoryService.getAll()
                 .stream()
@@ -75,6 +84,7 @@ public class InformationController {
                                   Authentication auth
     ) {
         if (result.hasErrors()) {
+            log.info("Form has errors");
             return "add-information";
         }
         if (information.getId() == null)
@@ -89,10 +99,11 @@ public class InformationController {
             creator = this.userService.get(user.getId());
 
             informationOrm.setAppUser(creator);
+            log.info("Successfully set information creator " + user.getUsername());
         }
 
         informationService.create(informationOrm);
-
+        log.finest("Successfully created information by user " + user.getUsername());
 
         return "redirect:/";
     }
@@ -227,6 +238,8 @@ public class InformationController {
         Optional<InformationOrm> informationOrm = informationService.getById(id);
         if (informationOrm.isPresent()) {
             model.addAttribute("information", modelMapper.map(informationOrm.get(), InformationDto.class));
+        }else{
+            log.warning("Information with id " + id + " is missing");
         }
         return "get_by_id";
     }

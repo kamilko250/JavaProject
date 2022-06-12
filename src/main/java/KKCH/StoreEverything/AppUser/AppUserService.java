@@ -1,6 +1,7 @@
 package KKCH.StoreEverything.AppUser;
 
 import KKCH.StoreEverything.EmailSender.MailService;
+import KKCH.StoreEverything.Enums.LoggerEnum;
 import KKCH.StoreEverything.Role.UserRole;
 import KKCH.StoreEverything.Role.UserRoleRepository;
 import KKCH.StoreEverything.Security.CustomUserDetailsService;
@@ -22,7 +23,7 @@ import java.util.logging.Logger;
 
 @Service("userService")
 public class AppUserService implements UserService {
-    public static final Logger log = KKCHLogger.getLogger();
+    private final Logger log = KKCHLogger.getLogger(LoggerEnum.USER);
     //---
     private final AppUserRepository appUserRepository;
     private final UserRoleRepository roleRepository;
@@ -50,8 +51,11 @@ public class AppUserService implements UserService {
 
     public AppUser get (Long id) {
         Optional<AppUser> appUser = appUserRepository.findById(id);
-        if (appUser.isPresent())
+        if (appUser.isPresent()) {
+            log.finer(String.format("User with id %d found", id));
             return appUser.get();
+        }
+        log.warning(String.format("Didnt find user with id %d", id));
         return null;
     }
 
@@ -76,6 +80,7 @@ public class AppUserService implements UserService {
         );
         newAppUser.setRoles(appUser.get()
                                     .getRoles());
+        log.finest(String.format("Set user %s roles", newAppUser.getLogin()));
         if (userDto.getPassword().equals("")) {
             newAppUser.setPassword(user.getPassword());
         } else {
@@ -97,20 +102,22 @@ public class AppUserService implements UserService {
 
     @Override
     public AppUser register (AppUserDto userDto) throws Exception {
-        //if(checkIfUserExist(userDto.getId())){
-        //    throw new Exception("User already exists");
-        //}
         AppUser user = new AppUser();
         BeanUtils.copyProperties(userDto, user);
         encodePassword(user, userDto);
-        UserRole role = roleRepository.findByName("ROLE_USER").get();//should never fail
+        UserRole role = roleRepository.findByName("ROLE_USER").get();
         Set<UserRole> roles = new HashSet<>();
         roles.add(role);
         user.setRoles(roles);//add to "user" role by default
+        if(user.getRoles().size() == 1){
+            log.finest(String.format("Correctly set user %s roles", user.getLogin()));
+        }else{
+            log.info(String.format("Failed to correctly set roles for user %s", user.getLogin()));
+        }
         appUserRepository.save(user);
 
         mailService.sendMail(user.getEmail(), "Registration", "Link to registration", false);
-
+        log.fine(String.format("Sent registration email to user %s having email %s", user.getLogin(), user.getEmail()));
         log.info("New user registered, login is " + user.getLogin());
 
         return user;
@@ -132,6 +139,9 @@ public class AppUserService implements UserService {
         if (usernamePasswordAuthenticationToken.isAuthenticated()) {
             SecurityContextHolder.getContext()
                     .setAuthentication(usernamePasswordAuthenticationToken);
+        }else{
+            log.severe(String.format("Failed to set authentication for user %s", login));
+            return;
         }
         log.info(String.format("User %s logged in", login));
     }
@@ -147,9 +157,13 @@ public class AppUserService implements UserService {
                 .getAuthentication()
                 .getName();
         Optional<AppUser> optUser = appUserRepository.findByName(name);
-        if(optUser.isEmpty()) return null;
+        if(optUser.isEmpty()) {
+            log.severe(String.format("Failed to get current user %s", name));
+            return null;
+        };
         AppUserDto userDto = new AppUserDto();
         BeanUtils.copyProperties(optUser.get(), userDto);
+        log.fine(String.format("Found user %s", name));
 
         return userDto;
     }
@@ -157,6 +171,7 @@ public class AppUserService implements UserService {
     @Override
     public boolean checkIfUserExist (Long id) {
         Optional<AppUser> appUser = appUserRepository.findById(id);
+
         return appUser.isPresent();
     }
 
@@ -167,5 +182,6 @@ public class AppUserService implements UserService {
 
     private void encodePassword (AppUser user, AppUserDto userdto) {
         user.setPassword(passwordEncoder.encode(userdto.getPassword()));
+        log.finer(String.format("Encoded password for user %s", user.getLogin()));
     }
 }
